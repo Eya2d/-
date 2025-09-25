@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاحتمالات المنفصلة في علوم الحاسوب - 45 شريحة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .slide {
+            width: 90%;
+            max-width: 1100px;
+            height: 85vh;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 45px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: absolute;
+            opacity: 0;
+            transform: translateX(100px);
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow-y: auto;
+            display: none;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            display: block;
+        }
+
+        .slide::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 4px;
+        }
+
+        /* Title Slide Styles */
+        .title-slide {
+            text-align: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.2em;
+            margin-bottom: 25px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .title-slide h2 {
+            font-size: 1.8em;
+            margin-bottom: 35px;
+            color: #e8f4f8;
+            font-style: italic;
+        }
+
+        .title-slide .author {
+            font-size: 1.4em;
+            margin: 15px 0;
+            color: #b8d4e3;
+        }
+
+        /* Chapter Slide Styles */
+        .chapter-slide {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chapter-slide h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .chapter-slide h2 {
+            font-size: 2.2em;
+            color: #ffe8e8;
+            margin-bottom: 20px;
+        }
+
+        /* Regular Slide Headers */
+        h1 {
+            color: #2c3e50;
+            font-size: 2.6em;
+            margin-bottom: 35px;
+            border-bottom: 4px solid #3498db;
+            padding-bottom: 15px;
+            font-weight: bold;
+        }
+
+        h2 {
+            color: #34495e;
+            font-size: 2.1em;
+            margin-bottom: 25px;
+        }
+
+        h3 {
+            color: #2980b9;
+            font-size: 1.6em;
+            margin: 25px 0 20px 0;
+            font-weight: bold;
+        }
+
+        h4 {
+            color: #e74c3c;
+            font-size: 1.4em;
+            margin: 20px 0 15px 0;
+            font-weight: bold;
+        }
+
+        /* Content Styles */
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ul {
+            list-style: none;
+            padding-right: 25px;
+            margin: 20px 0;
+        }
+
+        ul li {
+            padding: 12px 0;
+            padding-right: 35px;
+            position: relative;
+            font-size: 1.2em;
+            line-height: 1.5;
+        }
+
+        ul li::before {
+            content: "●";
+            position: absolute;
+            right: 0;
+            color: #3498db;
+            font-size: 1.4em;
+            top: 8px;
+        }
+
+        /* Special Content Boxes */
+        .definition {
+            background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-right: 6px solid #d63031;
+            font-size: 1.25em;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .definition strong {
+            font-size: 1.3em;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .example {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 3px solid #3498db;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .example::before {
+            content: "مثال";
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            background: #3498db;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .formula {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            line-height: 1.8;
+        }
+
+        .law {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .law h4 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        .application {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .objectives {
+            background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .objectives ul li::before {
+            content: "✓";
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .concept {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .math {
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* Navigation Controls */
+        .navigation {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            padding: 12px 18px;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: bold;
+            min-width: 45px;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Slide Counter */
+        .slide-counter {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            color: #2c3e50;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            transition: width 0.4s ease;
+            border-radius: 0 3px 3px 0;
+        }
+
+        /* Chapter Navigation */
+        .chapter-nav {
+            position: fixed;
+            top: 80px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            max-width: 200px;
+        }
+
+        .chapter-nav button {
+            display: block;
+            width: 100%;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-nav button:hover {
+            transform: translateX(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Floating shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.08;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .shape:nth-child(1) {
+            top: 15%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            top: 60%;
+            left: 85%;
+            animation-delay: 3s;
+        }
+
+        .shape:nth-child(3) {
+            top: 35%;
+            left: 75%;
+            animation-delay: 6s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-25px) rotate(90deg); }
+            50% { transform: translateY(-15px) rotate(180deg); }
+            75% { transform: translateY(-30px) rotate(270deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide {
+                width: 95%;
+                height: 90vh;
+                padding: 25px;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.2em;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .navigation {
+                bottom: 15px;
+                padding: 10px 15px;
+                gap: 8px;
+            }
+            
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 0.9em;
+                min-width: 40px;
+            }
+
+            .chapter-nav {
+                display: none;
+            }
+
+            .slide-counter {
+                top: 15px;
+                right: 15px;
+                padding: 8px 15px;
+                font-size: 1em;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .navigation, .slide-counter, .chapter-nav, .progress-container {
+                display: none;
+            }
+            
+            .slide {
+                position: static;
+                width: 100%;
+                height: auto;
+                margin: 20px 0;
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape" style="width: 120px; height: 120px; background: linear-gradient(45deg, #3498db, #2980b9); border-radius: 50%;"></div>
+        <div class="shape" style="width: 90px; height: 90px; background: linear-gradient(45deg, #e74c3c, #c0392b); border-radius: 20%;"></div>
+        <div class="shape" style="width: 70px; height: 70px; background: linear-gradient(45deg, #f39c12, #e67e22); transform: rotate(45deg);"></div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">45</span>
+    </div>
+
+    <div class="chapter-nav" id="chapterNav">
+        <button onclick="goToSlide(0)">العنوان</button>
+        <button onclick="goToSlide(3)">الفصل الأول</button>
+        <button onclick="goToSlide(15)">الفصل الثاني</button>
+        <button onclick="goToSlide(25)">الفصل الثالث</button>
+        <button onclick="goToSlide(40)">الخلاصة</button>
+    </div>
+
+    <div class="presentation-container">
+        <!-- الشريحة 1: العنوان -->
+        <div class="slide title-slide active">
+            <h1>الاحتمالات المنفصلة في علوم الحاسوب</h1>
+            <h2>Discrete Probability in Computer Science</h2>
+            <div class="author">د. محمد رشيدي</div>
+            <div class="author">كلية الحاسبات - قسم نظم المعلومات</div>
+            <div class="author" style="margin-top: 30px; font-size: 1.2em;">2025</div>
+        </div>
+
+        <!-- الشريحة 2: الفهرس -->
+        <div class="slide">
+            <h1>الفهرس</h1>
+            <ul style="font-size: 1.4em; line-height: 2;">
+                <li>8.1 مفاهيم الاحتمال في علوم الحاسوب</li>
+                <li>8.3 فضاءات العينة المضروبة</li>
+                <li>8.5 الأحداث المستقلة والاحتمال الشرطي</li>
+                <li>أمثلة تطبيقية وخلاصة</li>
+            </ul>
+        </div>
+
+        <!-- الشريحة 3: أهداف المحاضرة -->
+        <div class="slide">
+            <h1>أهداف المحاضرة</h1>
+            <div class="objectives">
+                <h3>بنهاية هذه المحاضرة، الطالب قادر على:</h3>
+                <ul>
+                    <li>تعريف المفاهيم الأساسية للاحتمالات المنفصلة</li>
+                    <li>تطبيق قوانين الاحتمالات على مسائل عملية</li>
+                    <li>حل مسائل الأحداث المستقلة والاحتمال الشرطي</li>
+                    <li>استخدام قاعدة بايز في التطبيقات التقنية</li>
+                    <li>تحليل الأنظمة الاحتمالية في علوم الحاسوب</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 4: فاصل الفصل الأول -->
+        <div class="slide chapter-slide">
+            <h2>الفصل الأول</h2>
+            <h1>مفاهيم الاحتمال الأساسية</h1>
+            <p style="font-size: 1.3em; margin-top: 30px;">(شرائح 4-15)</p>
+        </div>
+
+        <!-- الشريحة 5: ما هو الاحتمال؟ -->
+        <div class="slide">
+            <h1>ما هو الاحتمال؟</h1>
+            <div class="concept">
+                <h3>الاحتمال في الحياة اليومية</h3>
+                <p>الاحتمال هو مقياس لدرجة التأكد من وقوع حدث معين</p>
+            </div>
+            <div class="application">
+                <h3>التطبيقات في علوم الحاسوب:</h3>
+                <ul>
+                    <li>تحليل الخوارزميات</li>
+                    <li>أمان الشبكات</li>
+                    <li>الذكاء الاصطناعي</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 6: فضاء العينة -->
+        <div class="slide">
+            <h1>فضاء العينة</h1>
+            <div class="definition">
+                <strong>التعريف:</strong> مجموعة جميع المخرجات المحتملة
+            </div>
+            <div class="example">
+                <h3>أمثلة:</h3>
+                <ul>
+                    <li>رمي النرد: <span class="math">Ω = {1, 2, 3, 4, 5, 6}</span></li>
+                    <li>رمي العملة: <span class="math">Ω = {H, T}</span></li>
+                    <li>حالة الخادم: <span class="math">Ω = {working, down, maintenance}</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 7: الأحداث -->
+        <div class="slide">
+            <h1>الأحداث</h1>
+            <div class="definition">
+                <strong>التعريف:</strong> مجموعة جزئية من فضاء العينة
+            </div>
+            <div class="example">
+                <h3>مثال: رمي النرد</h3>
+                <ul>
+                    <li>Event A = {2, 4, 6} (عدد زوجي)</li>
+                    <li>Event B = {5, 6} (عدد > 4)</li>
+                    <li>Event C = {1, 3, 5} (عدد فردي)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 8: دالة كثافة الاحتمال -->
+        <div class="slide">
+            <h1>دالة كثافة الاحتمال</h1>
+            <div class="law">
+                <h4>الشروط:</h4>
+                <div class="formula">
+                    1. For each ω ∈ Ω: 0 ≤ p(ω) ≤ 1<br><br>
+                    2. Σ p(ω) = 1
+                </div>
+            </div>
+            <div class="example">
+                <h3>مثال: رمي عملة منتظمة</h3>
+                <div class="formula">p(H) = p(T) = 0.5</div>
+            </div>
+        </div>
+
+        <!-- الشريحة 9: حساب احتمال الأحداث -->
+        <div class="slide">
+            <h1>حساب احتمال الأحداث</h1>
+            <div class="law">
+                <h4>القاعدة:</h4>
+                <div class="formula">P(E) = Σ p(ω) for all ω ∈ E</div>
+            </div>
+            <div class="example">
+                <h3>مثال:</h3>
+                <p style="font-size: 1.3em; text-align: center; margin: 20px 0; background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    P(عدد زوجي) = p(2) + p(4) + p(6) = 1/6 + 1/6 + 1/6 = 1/2
+                </p>
+            </div>
+        </div>
+
+        <!-- الشريحة 10: قوانين الاحتمالات الأساسية -->
+        <div class="slide">
+            <h1>قوانين الاحتمالات الأساسية</h1>
+            <div class="law">
+                <div class="formula">
+                    1. P(E ∪ F) = P(E) + P(F) - P(E ∩ F)<br><br>
+                    2. P(E̅) = 1 - P(E)<br><br>
+                    3. If E ⊆ F then P(E) ≤ P(F)
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 11: مثال - قانون الاتحاد -->
+        <div class="slide">
+            <h1>مثال - قانون الاتحاد</h1>
+            <div class="example">
+                <h3>رمي النرد:</h3>
+                <ul>
+                    <li>A = {2, 4, 6} (زوجي), P(A) = 1/2</li>
+                    <li>B = {4, 5, 6} (≥ 4), P(B) = 1/2</li>
+                    <li>A ∩ B = {4, 6}, P(A ∩ B) = 1/3</li>
+                </ul>
+                <div class="formula">
+                    P(A ∪ B) = 1/2 + 1/2 - 1/3 = 2/3
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 12: التفسير التكراري -->
+        <div class="slide">
+            <h1>التفسير التكراري</h1>
+            <div class="concept">
+                <strong>المفهوم:</strong> كلما زاد عدد التجارب، اقتربت النسبة النسبية من الاحتمال النظري
+            </div>
+            <div class="example">
+                <h3>رمي العملة 1000 مرة:</h3>
+                <p>Expected heads ≈ 500</p>
+                <p>Actual: 487, 503, 496, 512, etc.</p>
+            </div>
+        </div>
+
+        <!-- الشريحة 13: اختيار فضاء العينة المناسب -->
+        <div class="slide">
+            <h1>اختيار فضاء العينة المناسب</h1>
+            <div class="example">
+                <h3>مثال: رمي نردين</h3>
+                <p><strong>طريقة 1:</strong> Ω₁ = {2, 3, ..., 12} (المجموع)</p>
+                <p><strong>طريقة 2:</strong> Ω₂ = {(1,1), (1,2), ..., (6,6)} (أزواج)</p>
+                <div class="concept">
+                    <p><strong>الطريقة 2 أفضل للحسابات!</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 14: الاحتمال المنتظم -->
+        <div class="slide">
+            <h1>الاحتمال المنتظم</h1>
+            <div class="concept">
+                <strong>عندما تكون جميع المخرجات متساوية:</strong>
+            </div>
+            <div class="formula">
+                p(ω) = 1/|Ω|<br><br>
+                P(E) = |E|/|Ω|
+            </div>
+        </div>
+
+        <!-- الشريحة 15: أمثلة على الاحتمال المنتظم -->
+        <div class="slide">
+            <h1>أمثلة على الاحتمال المنتظم</h1>
+            <div class="example">
+                <ul>
+                    <li>سحب ورقة: P(Ace) = 4/52 = 1/13</li>
+                    <li>رمي 3 عملات: P(exactly 2 heads) = 3/8</li>
+                    <li>كلمة مرور 4 أرقام: P(all different) = 5040/10000</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 16: نظرية المجموعات -->
+        <div class="slide">
+            <h1>نظرية المجموعات</h1>
+            <div class="law">
+                <h4>مبدأ الشمول والاستبعاد:</h4>
+                <div class="formula">
+                    P(A ∪ B ∪ C) = P(A) + P(B) + P(C)<br>
+                    - P(A ∩ B) - P(A ∩ C) - P(B ∩ C)<br>
+                    + P(A ∩ B ∩ C)
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 17: فاصل الفصل الثاني -->
+        <div class="slide chapter-slide">
+            <h2>الفصل الثاني</h2>
+            <h1>فضاءات العينة المضروبة</h1>
+            <p style="font-size: 1.3em; margin-top: 30px;">(شرائح 16-25)</p>
+        </div>
+
+        <!-- الشريحة 18: مبدأ الضرب -->
+        <div class="slide">
+            <h1>مبدأ الضرب</h1>
+            <div class="concept">
+                <strong>عند دمج تجربتين منفصلتين:</strong>
+            </div>
+            <div class="formula">
+                P(ω₁, ω₂) = p₁(ω₁) × p₂(ω₂)
+            </div>
+        </div>
+
+        <!-- الشريحة 19: مثال - رمي عملة ونرد -->
+        <div class="slide">
+            <h1>مثال - رمي عملة ونرد</h1>
+            <div class="example">
+                <ul>
+                    <li>Ω₁ = {H, T}, Ω₂ = {1, 2, 3, 4, 5, 6}</li>
+                    <li>Ω = Ω₁ × Ω₂ = {(H,1), (H,2), ..., (T,6)}</li>
+                </ul>
+                <div class="formula">
+                    P(H, 3) = 1/2 × 1/6 = 1/12
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 20: فضاءات متعددة الأبعاد -->
+        <div class="slide">
+            <h1>فضاءات متعددة الأبعاد</h1>
+            <div class="formula">
+                Ω = Ω₁ × Ω₂ × ... × Ωₙ<br><br>
+                p(ω₁, ω₂, ..., ωₙ) = p₁(ω₁) × p₂(ω₂) × ... × pₙ(ωₙ)
+            </div>
+        </div>
+
+        <!-- الشريحة 21: مثال - رمي 3 عملات -->
+        <div class="slide">
+            <h1>مثال - رمي 3 عملات</h1>
+            <div class="example">
+                <p><strong>فضاء العينة:</strong></p>
+                <p>Ω = {HHH, HHT, HTH, HTT, THH, THT, TTH, TTT}</p>
+                <div class="formula">
+                    P(HHT) = 1/2 × 1/2 × 1/2 = 1/8<br><br>
+                    P(exactly 2 heads) = 3/8
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 22: عمليات برنولي -->
+        <div class="slide">
+            <h1>عمليات برنولي</h1>
+            <div class="definition">
+                <strong>تسلسل تجارب مستقلة ذات مخرجتين (نجاح/فشل)</strong>
+            </div>
+            <div class="concept">
+                <ul>
+                    <li>احتمال النجاح = p</li>
+                    <li>احتمال الفشل = q = 1-p</li>
+                    <li>التجارب مستقلة</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 23: التوزيع الثنائي -->
+        <div class="slide">
+            <h1>التوزيع الثنائي</h1>
+            <div class="formula">
+                b(k; n, p) = C(n,k) × p^k × (1-p)^(n-k)
+            </div>
+            <div class="example">
+                <h3>مثال: رمي عملة 5 مرات</h3>
+                <p style="text-align: center; font-size: 1.2em;">
+                    P(exactly 3 heads) = C(5,3) × (0.5)³ × (0.5)²<br>
+                    = 10 × 0.125 × 0.25 = 0.3125
+                </p>
+            </div>
+        </div>
+
+        <!-- الشريحة 24: أحداث الشكل المضروب -->
+        <div class="slide">
+            <h1>أحداث الشكل المضروب</h1>
+            <div class="formula">
+                P(E₁ × E₂ × ... × Eₙ) = P(E₁) × P(E₂) × ... × P(Eₙ)
+            </div>
+        </div>
+
+        <!-- الشريحة 25: مثال - أحداث مضروبة -->
+        <div class="slide">
+            <h1>مثال - أحداث مضروبة</h1>
+            <div class="example">
+                <ul>
+                    <li>E₁ = {4, 5, 6} (نرد ≥ 4)</li>
+                    <li>E₂ = {hearts} (ورقة قلوب)</li>
+                </ul>
+                <div class="formula">
+                    P(E₁ × E₂) = 3/6 × 13/52 = 1/8
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 26: طرق عرض الأحداث -->
+        <div class="slide">
+            <h1>طرق عرض الأحداث</h1>
+            <div class="concept">
+                <p><strong>الطريقة الأولى:</strong> الحدث في الفضاء المركب</p>
+                <p><strong>الطريقة الثانية:</strong> الحدث المقابل</p>
+            </div>
+            <div class="example">
+                <p>Event in Ω₁: E₁ = {H}</p>
+                <p>Corresponding event: E₁* = {H} × Ω₂</p>
+                <div class="formula">P(E₁*) = P(E₁) = 1/2</div>
+            </div>
+        </div>
+
+        <!-- الشريحة 27: تطبيق - شبكات الحاسوب -->
+        <div class="slide">
+            <h1>تطبيق - شبكات الحاسوب</h1>
+            <div class="application">
+                <h3>3 جدران حماية مستقلة، كل واحد يوقف 90% من الهجمات:</h3>
+                <div class="formula">
+                    P(attack blocked) = 1 - P(all fail)<br>
+                    = 1 - (0.1)³ = 0.999
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 28: فاصل الفصل الثالث -->
+        <div class="slide chapter-slide">
+            <h2>الفصل الثالث</h2>
+            <h1>الأحداث المستقلة والاحتمال الشرطي</h1>
+            <p style="font-size: 1.3em; margin-top: 30px;">(شرائح 26-40)</p>
+        </div>
+
+        <!-- الشريحة 29: تعريف الاستقلالية -->
+        <div class="slide">
+            <h1>تعريف الاستقلالية</h1>
+            <div class="formula">
+                A and B independent ⟺ P(A ∩ B) = P(A) × P(B)
+            </div>
+        </div>
+
+        <!-- الشريحة 30: مثال - أحداث مستقلة -->
+        <div class="slide">
+            <h1>مثال - أحداث مستقلة</h1>
+            <div class="example">
+                <h3>رمي عملة ونرد:</h3>
+                <ul>
+                    <li>A = {H} (صورة), P(A) = 1/2</li>
+                    <li>B = {6} (ستة), P(B) = 1/6</li>
+                    <li>P(A ∩ B) = P(H, 6) = 1/12</li>
+                    <li>P(A) × P(B) = 1/2 × 1/6 = 1/12 ✓</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 31: الاستقلالية ≠ الانفصال -->
+        <div class="slide">
+            <h1>الاستقلالية ≠ الانفصال</h1>
+            <div class="concept">
+                <p>الأحداث المنفصلة ذات الاحتمالات الموجبة ليست مستقلة:</p>
+            </div>
+            <div class="formula">
+                A ∩ B = ∅ ⟹ P(A ∩ B) = 0<br><br>
+                لكن P(A) × P(B) > 0
+            </div>
+        </div>
+
+        <!-- الشريحة 32: الاحتمال الشرطي -->
+        <div class="slide">
+            <h1>الاحتمال الشرطي</h1>
+            <div class="formula">
+                P(B|A) = P(B ∩ A) / P(A)  where P(A) > 0
+            </div>
+        </div>
+
+        <!-- الشريحة 33: مثال - الاحتمال الشرطي -->
+        <div class="slide">
+            <h1>مثال - الاحتمال الشرطي</h1>
+            <div class="example">
+                <h3>رمي النرد:</h3>
+                <ul>
+                    <li>A = {2, 4, 6} (زوجي)</li>
+                    <li>B = {4, 5, 6} (≥ 4)</li>
+                </ul>
+                <div class="formula">
+                    P(B|A) = P({4, 6}) / P(A) = (2/6) / (3/6) = 2/3
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 34: الاحتمال الشرطي والاستقلالية -->
+        <div class="slide">
+            <h1>الاحتمال الشرطي والاستقلالية</h1>
+            <div class="concept">
+                <p>إذا كان A و B مستقلين:</p>
+            </div>
+            <div class="formula">
+                P(B|A) = P(B)
+            </div>
+        </div>
+
+        <!-- الشريحة 35: نظرية الاحتمال الكلي -->
+        <div class="slide">
+            <h1>نظرية الاحتمال الكلي</h1>
+            <div class="formula">
+                P(A) = Σᵢ P(A|Eᵢ) × P(Eᵢ)
+            </div>
+            <p style="text-align: center; font-size: 1.3em; margin-top: 30px;">
+                حيث E₁, E₂, ..., Eₙ تشكل تقسيماً لـ Ω
+            </p>
+        </div>
+
+        <!-- الشريحة 36: مثال - نظرية الاحتمال الكلي -->
+        <div class="slide">
+            <h1>مثال - نظرية الاحتمال الكلي</h1>
+            <div class="example">
+                <h3>مصنع بثلاث خطوط إنتاج:</h3>
+                <ul>
+                    <li>Line 1: 40% من الإنتاج، 2% معيب</li>
+                    <li>Line 2: 35% من الإنتاج، 3% معيب</li>
+                    <li>Line 3: 25% من الإنتاج، 1% معيب</li>
+                </ul>
+                <div class="formula">
+                    P(معيب) = 0.02×0.40 + 0.03×0.35 + 0.01×0.25 = 0.021
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 37: قاعدة بايز -->
+        <div class="slide">
+            <h1>قاعدة بايز</h1>
+            <div class="formula">
+                P(A|B) = P(B|A) × P(A) / P(B)
+            </div>
+        </div>
+
+        <!-- الشريحة 38: مثال - قاعدة بايز (التشخيص الطبي) -->
+        <div class="slide">
+            <h1>مثال - قاعدة بايز (التشخيص الطبي)</h1>
+            <div class="example">
+                <h3>معطى:</h3>
+                <ul>
+                    <li>P(مرض) = 0.01</li>
+                    <li>P(إيجابي|مرض) = 0.95</li>
+                    <li>P(إيجابي|سليم) = 0.05</li>
+                </ul>
+                <h3>مطلوب: P(مرض|إيجابي)</h3>
+                <div class="formula">الحل: P(مرض|إيجابي) = 0.161</div>
+            </div>
+        </div>
+
+        <!-- الشريحة 39: مثال - اختبار الجودة -->
+        <div class="slide">
+            <h1>مثال - اختبار الجودة</h1>
+            <div class="example">
+                <ul>
+                    <li>Machine A: 60% من الإنتاج، 2% معيب</li>
+                    <li>Machine B: 40% من الإنتاج، 5% معيب</li>
+                    <li>منتج معيب تم اكتشافه</li>
+                </ul>
+                <div class="formula">
+                    P(من Machine A | معيب) = 0.375
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 40: تطبيق - أمان المعلومات -->
+        <div class="slide">
+            <h1>تطبيق - أمان المعلومات</h1>
+            <div class="example">
+                <ul>
+                    <li>مستخدمون عاديون: 95%، 1% فشل في المصادقة</li>
+                    <li>مهاجمون: 5%، 80% فشل في المصادقة</li>
+                    <li>فشلت عملية مصادقة</li>
+                </ul>
+                <div class="formula">
+                    P(مهاجم | فشل) = 0.808
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 41: مشكلة الأبواب الثلاثة -->
+        <div class="slide">
+            <h1>مشكلة الأبواب الثلاثة</h1>
+            <div class="application">
+                <ul>
+                    <li>3 أبواب: خلف أحدها سيارة</li>
+                    <li>تختار باب</li>
+                    <li>المقدم يفتح باب آخر فارغ</li>
+                    <li>هل تغير اختيارك؟</li>
+                </ul>
+                <div class="formula">
+                    الجواب: نعم! P(win by switching) = 2/3
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 42: تطبيق - كشف الشذوذ -->
+        <div class="slide">
+            <h1>تطبيق - كشف الشذوذ</h1>
+            <div class="example">
+                <ul>
+                    <li>حركة مرور عادية: 99%، 0.1% مشبوهة</li>
+                    <li>حركة هجوم: 1%، 90% مشبوهة</li>
+                    <li>حزمة مشبوهة تم رصدها</li>
+                </ul>
+                <div class="formula">
+                    P(هجوم | مشبوهة) = 0.901
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 43: تركيب الأحداث المشروطة -->
+        <div class="slide">
+            <h1>تركيب الأحداث المشروطة</h1>
+            <div class="formula">
+                P(A ∩ B) = P(A) × P(B|A) = P(B) × P(A|B)
+            </div>
+            <div class="example">
+                <h3>مثال - سحب بدون إرجاع:</h3>
+                <div class="formula">
+                    P(both red) = P(R₁) × P(R₂|R₁) = 5/8 × 4/7 = 5/14
+                </div>
+            </div>
+        </div>
+
+        <!-- الشريحة 44: ملخص المفاهيم الأساسية -->
+        <div class="slide">
+            <h1>ملخص المفاهيم الأساسية</h1>
+            <div class="summary">
+                <ul>
+                    <li>فضاء العينة والأحداث</li>
+                    <li>دوال كثافة الاحتمال</li>
+                    <li>قوانين الاحتمالات الأساسية</li>
+                    <li>التفسير التكراري</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 45: ملخص فضاءات العينة المضروبة -->
+        <div class="slide">
+            <h1>ملخص فضاءات العينة المضروبة</h1>
+            <div class="summary">
+                <ul>
+                    <li>مبدأ الضرب</li>
+                    <li>عمليات برنولي والتوزيع الثنائي</li>
+                    <li>أحداث الشكل المضروب</li>
+                    <li>الأنظمة المتوازية والمتسلسلة</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 46: ملخص الاستقلالية والاحتمال الشرطي -->
+        <div class="slide">
+            <h1>ملخص الاستقلالية والاحتمال الشرطي</h1>
+            <div class="summary">
+                <ul>
+                    <li>تعريف الاستقلالية</li>
+                    <li>الاحتمال الشرطي</li>
+                    <li>نظرية الاحتمال الكلي</li>
+                    <li>قاعدة بايز</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 47: التطبيقات في علوم الحاسوب -->
+        <div class="slide">
+            <h1>التطبيقات في علوم الحاسوب</h1>
+            <div class="application">
+                <ul>
+                    <li>تحليل أداء الخوارزميات</li>
+                    <li>أمان الشبكات وكشف التسلل</li>
+                    <li>أنظمة التشخيص والذكاء الاصطناعي</li>
+                    <li>ضمان الجودة واختبار البرمجيات</li>
+                    <li>الحوسبة الموثوقة</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- الشريحة 48: شكراً لكم -->
+        <div class="slide title-slide">
+            <h1>شكراً لكم</h1>
+            <h2>أسئلة ومناقشة</h2>
+            <div class="author">د. محمد رشيدي</div>
+            <div class="author">كلية الحاسبات - قسم نظم المعلومات</div>
+            <div class="author" style="margin-top: 30px; font-size: 1.1em;">
+                المراجع والمصادر<br>
+                معلومات التواصل
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="previousSlide()">السابق</button>
+        <button class="nav-btn" onclick="toggleFullscreen()">⛶</button>
+        <button class="nav-btn" onclick="showShortcuts()">❓</button>
+        <button class="nav-btn" onclick="goToSlide(0)">🏠</button>
+        <button class="nav-btn" id="nextBtn" onclick="nextSlide()">التالي</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        // Update slide counter
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            // Hide all slides
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            // Show current slide
+            if (index >= 0 && index < totalSlides) {
+                slides[index].classList.add('active');
+                currentSlideIndex = index;
+                
+                // Update counter
+                document.getElementById('currentSlide').textContent = index + 1;
+                
+                // Update progress bar
+                const progress = ((index + 1) / totalSlides) * 100;
+                document.getElementById('progressBar').style.width = progress + '%';
+                
+                // Update navigation buttons
+                document.getElementById('prevBtn').disabled = index === 0;
+                document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+                
+                // Reset animations by triggering reflow
+                const currentSlide = slides[index];
+                currentSlide.style.animation = 'none';
+                currentSlide.offsetHeight; // Trigger reflow
+                currentSlide.style.animation = null;
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                showSlide(currentSlideIndex + 1);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                showSlide(currentSlideIndex - 1);
+            }
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                case 'Enter':
+                case 'PageDown':
+                    e.preventDefault();
+                    nextSlide();
+                    break;
+                case 'ArrowLeft':
+                case 'Backspace':
+                case 'PageUp':
+                    e.preventDefault();
+                    previousSlide();
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    goToSlide(0);
+                    break;
+                case 'End':
+                    e.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    break;
+                case 'Escape':
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                    break;
+                case 'F5':
+                    e.preventDefault();
+                    toggleFullscreen();
+                    break;
+            }
+        });
+
+        // Touch/swipe navigation for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next slide
+                    nextSlide();
+                } else {
+                    // Swipe right - previous slide
+                    previousSlide();
+                }
+            }
+        }
+
+        // Fullscreen toggle
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log('Error attempting to enable fullscreen:', err.message);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Show shortcuts
+        function showShortcuts() {
+            alert(`اختصارات لوحة المفاتيح:
+            
+→ أو مسافة أو Enter: الشريحة التالية
+← أو Backspace: الشريحة السابقة
+Home: الشريحة الأولى
+End: الشريحة الأخيرة
+F5: العرض الكامل
+ESC: الخروج من العرض الكامل
+
+التنقل بالفأرة:
+النقر على الجانب الأيمن: التالي
+النقر على الجانب الأيسر: السابق
+
+التنقل باللمس:
+السحب يميناً أو يساراً`);
+        }
+
+        // Mouse navigation
+        document.addEventListener('click', (e) => {
+            const rect = window.innerWidth;
+            const clickX = e.clientX;
+            
+            // Don't navigate if clicking on navigation or interactive elements
+            if (e.target.closest('.navigation') || 
+                e.target.closest('.slide-counter') || 
+                e.target.closest('.chapter-nav')) {
+                return;
+            }
+            
+            // Click on right side = next slide, left side = previous slide
+            if (clickX > rect * 0.7) {
+                nextSlide();
+            } else if (clickX < rect * 0.3) {
+                previousSlide();
+            }
+        });
+
+        // Auto-hide cursor during presentation
+        let cursorTimeout;
+        function hideCursor() {
+            document.body.style.cursor = 'none';
+        }
+
+        function showCursor() {
+            document.body.style.cursor = 'default';
+            clearTimeout(cursorTimeout);
+            cursorTimeout = setTimeout(hideCursor, 3000);
+        }
+
+        document.addEventListener('mousemove', showCursor);
+        cursorTimeout = setTimeout(hideCursor, 3000);
+
+        // Initialize presentation
+        showSlide(0);
+        
+        // Prevent context menu
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        // Handle fullscreen changes
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                document.getElementById('chapterNav').style.display = 'none';
+            } else {
+                document.getElementById('chapterNav').style.display = 'block';
+            }
+        });
+
+        // Print functionality
+        function printPresentation() {
+            window.print();
+        }
+
+        // Export functionality
+        function exportToPDF() {
+            alert('لتصدير العرض كـ PDF، استخدم وظيفة الطباعة في المتصفح واختر "حفظ كـ PDF"');
+        }
+    </script>
+</body>
+</html>

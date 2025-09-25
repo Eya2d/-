@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الدوائر المنطقية والأنظمة الثنائية - د. محمد رشيدي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2E8B57 0%, #4682B4 50%, #9932CC 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            max-width: 90%;
+            max-height: 85vh;
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        h1 { font-size: 2.5em; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        h2 { font-size: 1.8em; margin-bottom: 12px; color: #FFD700; }
+        h3 { font-size: 1.5em; margin-bottom: 15px; color: #87CEEB; }
+        h4 { font-size: 1.4em; margin-bottom: 15px; color: #98FB98; }
+        p, li { font-size: 1.2em; line-height: 1.5; margin-bottom: 12px; }
+        .emoji { font-size: 1.5em; margin-left: 10px; }
+
+        .example-box {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-right: 4px solid #FFD700;
+        }
+
+        .success-box {
+            background: rgba(0,255,127,0.2);
+            border: 2px solid #00FF7F;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .warning-box {
+            background: rgba(255,69,0,0.2);
+            border: 2px solid #FF4500;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .binary-conversion {
+            background: rgba(138,43,226,0.2);
+            border: 2px solid #8A2BE2;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .truth-table {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px auto;
+            width: 90%;
+            max-width: 600px;
+            white-space: pre;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .circuit-diagram {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 500px;
+            font-size: 1.1em;
+            direction: ltr;
+            text-align: center;
+        }
+
+        .goals-list {
+            text-align: right;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .goals-list li {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .highlight { color: #FFD700; font-weight: bold; }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .controls button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .controls button:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+        }
+
+        .university-logo {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- University Logo -->
+    <div class="university-logo">
+        <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <path d="M200 40 L220 100 L280 100 L235 140 L255 200 L200 170 L145 200 L165 140 L120 100 L180 100 Z" 
+                  fill="#87CEEB" stroke="#2c3e50" stroke-width="6"/>
+            <path d="M170 120 Q200 110 230 120 Q230 150 200 160 Q170 150 170 120" 
+                  fill="none" stroke="#2c3e50" stroke-width="3"/>
+            <line x1="180" y1="130" x2="220" y2="130" stroke="#2c3e50" stroke-width="2"/>
+            <text x="200" y="190" font-family="Arial" font-size="12" text-anchor="middle" fill="#2c3e50">
+                الجامعة الإسلامية بمنيسوتا
+            </text>
+        </svg>
+    </div>
+
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">30</span>
+    </div>
+
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>الدوائر المنطقية والأنظمة الثنائية</h1>
+            <h2>(Logic Gates & Binary Systems)</h2>
+            <h3>الرياضيات الحاسوبية - المحاضرة الثانية</h3>
+            <h4>د/ محمد رشيدي</h4>
+            <p>كلية الحاسبات وتقنية المعلومات</p>
+            <p>الجامعة الإسلامية بولاية منيسوتا</p>
+        </div>
+
+        <!-- Slide 2: Objectives -->
+        <div class="slide">
+            <h1><span class="emoji">🎯</span> أهداف المحاضرة</h1>
+            <ul class="goals-list">
+                <li><strong>فهم</strong> الدوائر المنطقية وكيفية عملها</li>
+                <li><strong>تصميم</strong> دوائر بسيطة باستخدام البوابات</li>
+                <li><strong>إتقان</strong> التحويل بين الأنظمة العددية</li>
+                <li><strong>إجراء</strong> العمليات الحسابية الثنائية</li>
+                <li><strong>تطبيق</strong> المفاهيم في حل المشكلات العملية</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: What are Logic Gates -->
+        <div class="slide">
+            <h1><span class="emoji">⚡</span> ما هي الدوائر المنطقية؟</h1>
+            <div class="example-box">
+                <h3>التعريف:</h3>
+                <p>دوائر إلكترونية تطبق عمليات الجبر البوليني</p>
+                <p><span class="highlight">كهرباء موجودة = 1</span></p>
+                <p><span class="highlight">كهرباء غير موجودة = 0</span></p>
+            </div>
+            <div class="success-box">
+                <h3>أمثلة من الحياة:</h3>
+                <p>💡 المفتاح الكهربائي - 🚪 جرس الباب - 🔒 القفل الرقمي</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: AND Gate -->
+        <div class="slide">
+            <h1><span class="emoji">🔌</span> بوابة AND</h1>
+            <div class="circuit-diagram">
+                <pre>    A ──┐
+        └─ AND ───── Output
+    B ──┘</pre>
+            </div>
+            <div class="example-box">
+                <p><span class="highlight">الخرج = 1 فقط إذا كان جميع المدخلات = 1</span></p>
+            </div>
+            <div class="truth-table">A | B | Output
+--|---|--------
+0 | 0 |   0
+0 | 1 |   0
+1 | 0 |   0
+1 | 1 |   1</div>
+        </div>
+
+        <!-- Slide 5: OR Gate -->
+        <div class="slide">
+            <h1><span class="emoji">🌟</span> بوابة OR</h1>
+            <div class="circuit-diagram">
+                <pre>    A ──┐
+        └─ OR ───── Output
+    B ──┘</pre>
+            </div>
+            <div class="example-box">
+                <p><span class="highlight">الخرج = 1 إذا كان أي مدخل = 1</span></p>
+            </div>
+            <div class="truth-table">A | B | Output
+--|---|--------
+0 | 0 |   0
+0 | 1 |   1
+1 | 0 |   1
+1 | 1 |   1</div>
+        </div>
+
+        <!-- Slide 6: NOT Gate -->
+        <div class="slide">
+            <h1><span class="emoji">🔄</span> بوابة NOT</h1>
+            <div class="circuit-diagram">
+                <pre>A ──── NOT ○──── Output</pre>
+            </div>
+            <div class="example-box">
+                <p><span class="highlight">الخرج = عكس المدخل</span></p>
+            </div>
+            <div class="truth-table">A | Output
+--|--------
+0 |   1
+1 |   0</div>
+        </div>
+
+        <!-- Slide 7: Binary System Introduction -->
+        <div class="slide">
+            <h1><span class="emoji">🔢</span> النظام الثنائي</h1>
+            <div class="example-box">
+                <h3>لماذا يستخدم الحاسوب النظام الثنائي؟</h3>
+                <p><span class="highlight">البوابات تفهم حالتين فقط: 0 و 1</span></p>
+            </div>
+            <div class="binary-conversion">
+                <h3>مقارنة الأنظمة:</h3>
+                <p><strong>عشري:</strong> 0,1,2,3,4,5,6,7,8,9 (أساس 10)</p>
+                <p><strong>ثنائي:</strong> 0,1 فقط (أساس 2)</p>
+                <p><strong>مثال:</strong> 5 عشري = 101 ثنائي</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Understanding Binary -->
+        <div class="slide">
+            <h1><span class="emoji">🔍</span> فهم النظام الثنائي</h1>
+            <div class="example-box">
+                <p><span class="highlight">كل منزلة = قوة من الـ 2</span></p>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال: 1011</h3>
+                <div class="truth-table">المنزلة: 2³  2²  2¹  2⁰
+القيمة:    8   4   2   1
+الرقم:     1   0   1   1
+النتيجة: 1×8 + 0×4 + 1×2 + 1×1 = 11</div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Binary to Decimal Examples -->
+        <div class="slide">
+            <h1><span class="emoji">📚</span> أمثلة: ثنائي → عشري</h1>
+            <div class="binary-conversion">
+                <h3>مثال 1: 1010</h3>
+                <div class="truth-table">8×1 + 4×0 + 2×1 + 1×0 = 8+0+2+0 = 10</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال 2: 1111</h3>
+                <div class="truth-table">8×1 + 4×1 + 2×1 + 1×1 = 8+4+2+1 = 15</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال 3: 10110101 (8 بت)</h3>
+                <div class="truth-table">128+32+16+4+1 = 181</div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Decimal to Binary Method -->
+        <div class="slide">
+            <h1><span class="emoji">🔄</span> عشري → ثنائي</h1>
+            <div class="example-box">
+                <h3>الطريقة: القسمة المتتالية على 2</h3>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال: تحويل 25</h3>
+                <div class="truth-table">25 ÷ 2 = 12 باقي 1 ←
+12 ÷ 2 = 6  باقي 0 ←
+6  ÷ 2 = 3  باقي 0 ←
+3  ÷ 2 = 1  باقي 1 ←
+1  ÷ 2 = 0  باقي 1 ←
+
+النتيجة: 11001</div>
+            </div>
+        </div>
+
+        <!-- Slide 11: More Decimal to Binary -->
+        <div class="slide">
+            <h1><span class="emoji">📊</span> أمثلة: عشري → ثنائي</h1>
+            <div class="binary-conversion">
+                <h3>مثال 1: 13 → 1101</h3>
+                <div class="truth-table">13÷2=6 باقي1, 6÷2=3 باقي0, 3÷2=1 باقي1, 1÷2=0 باقي1</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال 2: 50 → 110010</h3>
+                <div class="truth-table">50÷2=25 باقي0, 25÷2=12 باقي1, 12÷2=6 باقي0
+6÷2=3 باقي0, 3÷2=1 باقي1, 1÷2=0 باقي1</div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Quick Tricks -->
+        <div class="slide">
+            <h1><span class="emoji">⚡</span> حيل سريعة</h1>
+            <div class="success-box">
+                <h3>أرقام مهمة:</h3>
+                <div class="truth-table">1 = 0001    8 = 1000
+2 = 0010   15 = 1111
+4 = 0100   16 = 10000
+             255 = 11111111</div>
+            </div>
+            <div class="example-box">
+                <h3>حيلة ذكية:</h3>
+                <p><strong>2ⁿ في الثنائي = 1 متبوعة بـ n أصفار</strong></p>
+                <p>مثال: 2⁴ = 16 = 10000</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Binary Addition -->
+        <div class="slide">
+            <h1><span class="emoji">➕</span> الجمع الثنائي</h1>
+            <div class="example-box">
+                <h3>القواعد:</h3>
+                <div class="truth-table">0 + 0 = 0
+0 + 1 = 1
+1 + 0 = 1
+1 + 1 = 10 (0 وننقل 1)</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال: 1011 + 1101</h3>
+                <div class="truth-table">    1011  (11)
+  + 1101  (13)
+  ------
+   11000  (24)</div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Binary Subtraction -->
+        <div class="slide">
+            <h1><span class="emoji">➖</span> الطرح الثنائي</h1>
+            <div class="example-box">
+                <h3>القواعد:</h3>
+                <div class="truth-table">0 - 0 = 0
+1 - 0 = 1
+1 - 1 = 0
+0 - 1 = 1 (مع استلاف)</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال: 1101 - 1001</h3>
+                <div class="truth-table">  1101  (13)
+- 1001  (9)
+------
+  0100  (4)</div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Practical Applications -->
+        <div class="slide">
+            <h1><span class="emoji">💻</span> تطبيقات عملية</h1>
+            <div class="binary-conversion">
+                <h3>1. عناوين IP</h3>
+                <div class="truth-table">192.168.1.1
+192 = 11000000
+168 = 10101000
+  1 = 00000001</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>2. أذونات Linux</h3>
+                <div class="truth-table">chmod 755
+7 = 111 (read+write+execute)
+5 = 101 (read+execute)</div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Memory Units -->
+        <div class="slide">
+            <h1><span class="emoji">💾</span> وحدات الذاكرة</h1>
+            <div class="truth-table">1 Bit  = 0 أو 1
+1 Byte = 8 Bits
+1 KB   = 1024 Bytes
+1 MB   = 1024 KB
+1 GB   = 1024 MB</div>
+            <div class="warning-box">
+                <h3>انتبه!</h3>
+                <p><strong>1 KB = 1024 Bytes</strong> (ليس 1000)</p>
+            </div>
+        </div>
+
+        <!-- Slide 17: XOR Gate -->
+        <div class="slide">
+            <h1><span class="emoji">🌟</span> بوابة XOR</h1>
+            <div class="circuit-diagram">
+                <pre>    A ──┐
+        └─ XOR ───── Output
+    B ──┘</pre>
+            </div>
+            <div class="example-box">
+                <p><span class="highlight">الخرج = 1 إذا كان المدخلان مختلفان</span></p>
+            </div>
+            <div class="truth-table">A | B | Output
+--|---|--------
+0 | 0 |   0
+0 | 1 |   1
+1 | 0 |   1
+1 | 1 |   0</div>
+        </div>
+
+        <!-- Slide 18: Half Adder -->
+        <div class="slide">
+            <h1><span class="emoji">⚡</span> Half Adder</h1>
+            <div class="example-box">
+                <h3>دائرة الجمع الأساسية</h3>
+            </div>
+            <div class="circuit-diagram">
+                <pre>A ──┐
+    └─ XOR ──── Sum
+B ──┘
+
+A ──┐
+    └─ AND ──── Carry
+B ──┘</pre>
+            </div>
+            <div class="success-box">
+                <p><strong>Sum = A XOR B</strong></p>
+                <p><strong>Carry = A AND B</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Encryption with XOR -->
+        <div class="slide">
+            <h1><span class="emoji">🔐</span> التشفير بـ XOR</h1>
+            <div class="example-box">
+                <p><span class="highlight">النص المشفر = النص الأصلي XOR المفتاح</span></p>
+            </div>
+            <div class="binary-conversion">
+                <h3>مثال:</h3>
+                <div class="truth-table">النص: H = 01001000
+المفتاح:   = 11110000
+المشفر:    = 10111000</div>
+            </div>
+            <div class="success-box">
+                <h3>خاصية مهمة:</h3>
+                <p>A XOR B XOR B = A</p>
+            </div>
+        </div>
+
+        <!-- Slide 20: Exercise 1 -->
+        <div class="slide">
+            <h1><span class="emoji">🎯</span> تمرين شامل (1)</h1>
+            <div class="warning-box">
+                <h2>وقت الحل: 5 دقائق</h2>
+            </div>
+            <div class="binary-conversion">
+                <h3>أ) التحويل:</h3>
+                <div class="truth-table">1. 10111₂ = ?₁₀
+2. 37₁₀ = ?₂
+3. 101010₂ = ?₁₀</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>ب) العمليات:</h3>
+                <div class="truth-table">1. 1011 + 1110
+2. 10000 - 0111</div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Exercise 1 Solutions -->
+        <div class="slide">
+            <h1><span class="emoji">✅</span> حلول التمرين (1)</h1>
+            <div class="success-box">
+                <h3>أ) التحويل:</h3>
+                <div class="truth-table">1. 10111₂ = 16+4+2+1 = 23₁₀
+2. 37₁₀ = 100101₂
+3. 101010₂ = 32+8+2 = 42₁₀</div>
+            </div>
+            <div class="success-box">
+                <h3>ب) العمليات:</h3>
+                <div class="truth-table">1. 1011 + 1110 = 11001 (11+14=25)
+2. 10000 - 0111 = 1001 (16-7=9)</div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Exercise 2 -->
+        <div class="slide">
+            <h1><span class="emoji">🎯</span> تمرين شامل (2)</h1>
+            <div class="binary-conversion">
+                <h3>مسائل تطبيقية:</h3>
+                <div class="truth-table">1. كم بت نحتاج لتمثيل الرقم 300؟
+2. أكبر رقم في 6 بت؟
+3. كم بايت في 2 MB؟
+4. حول IP: 192.168.1.100</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>البوابات المنطقية:</h3>
+                <div class="truth-table">1. صمم دائرة: F = A AND (B OR C)
+2. بسط: (A OR B) AND (A OR NOT B)</div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Exercise 2 Solutions -->
+        <div class="slide">
+            <h1><span class="emoji">✅</span> حلول التمرين (2)</h1>
+            <div class="success-box">
+                <h3>التطبيقية:</h3>
+                <div class="truth-table">1. 300 يحتاج 9 بت (2⁹=512 > 300)
+2. 6 بت = 2⁶-1 = 63
+3. 2 MB = 2×1024×1024 = 2,097,152 بايت
+4. 192=11000000, 168=10101000, 1=00000001, 100=01100100</div>
+            </div>
+            <div class="success-box">
+                <h3>البوابات:</h3>
+                <div class="truth-table">1. B,C → OR → AND مع A
+2. (A OR B) AND (A OR NOT B) = A</div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Common Mistakes -->
+        <div class="slide">
+            <h1><span class="emoji">⚠️</span> أخطاء شائعة</h1>
+            <div class="warning-box">
+                <h3>في التحويل:</h3>
+                <p>• نسيان الأصفار الأمامية في 8 بت</p>
+                <p>• خطأ في ترتيب الباقي (من أسفل لأعلى)</p>
+            </div>
+            <div class="warning-box">
+                <h3>في الذاكرة:</h3>
+                <p>• 1 KB = 1000 ❌ الصحيح: 1024</p>
+                <p>• خلط بين bit و byte</p>
+            </div>
+            <div class="warning-box">
+                <h3>في البوابات:</h3>
+                <p>• AND له أولوية أعلى من OR</p>
+                <p>• NOT يؤثر على ما بعده مباشرة</p>
+            </div>
+        </div>
+
+        <!-- Slide 25: From Gates to AI -->
+        <div class="slide">
+            <h1><span class="emoji">🤖</span> من البوابات للذكاء الاصطناعي</h1>
+            <div class="example-box">
+                <h3>الحقيقة المذهلة:</h3>
+                <p><strong>معالج Intel Core i7 = 1.4 مليار بوابة منطقية</strong></p>
+            </div>
+            <div class="success-box">
+                <h3>كيف يعمل ChatGPT؟</h3>
+                <div class="truth-table">مدخلات → بوابات منطقية → عمليات معقدة → ذكاء اصطناعي</div>
+            </div>
+            <div class="binary-conversion">
+                <h3>من البسيط للمعقد:</h3>
+                <p>AND, OR, NOT → Half Adder → معالج → ذكاء اصطناعي</p>
+            </div>
+        </div>
+
+        <!-- Slide 26: Exam Tips -->
+        <div class="slide">
+            <h1><span class="emoji">💪</span> نصائح الامتحان</h1>
+            <div class="success-box">
+                <h3>✅ للنجاح:</h3>
+                <p>• احفظ قوى الـ 2: 1,2,4,8,16,32,64,128,256,512,1024</p>
+                <p>• تأكد من إجابتك بالتحويل العكسي</p>
+                <p>• اكتب الخطوات للحصول على درجات جزئية</p>
+                <p>• ابدأ بالأسئلة السهلة</p>
+            </div>
+            <div class="warning-box">
+                <h3>⚠️ تجنب:</h3>
+                <p>• الخلط بين 1024 و 1000</p>
+                <p>• نسيان المنقول في الجمع الثنائي</p>
+                <p>• ترتيب العمليات: AND قبل OR</p>
+            </div>
+        </div>
+
+        <!-- Slide 27: Next Lecture -->
+        <div class="slide">
+            <h1><span class="emoji">🔮</span> المحاضرة القادمة</h1>
+            <div class="example-box">
+                <h2>"معمارية الحاسوب والذاكرة"</h2>
+                <h3>(Computer Architecture & Memory)</h3>
+            </div>
+            <div class="binary-conversion">
+                <h3>ما سنتعلمه:</h3>
+                <p>• كيف تتصل البوابات لتكوين معالج</p>
+                <p>• أنواع الذاكرة: RAM, ROM, Cache</p>
+                <p>• دورة التنفيذ: Fetch → Decode → Execute</p>
+                <p>• كيف يعمل الحاسوب داخلياً</p>
+            </div>
+            <div class="success-box">
+                <h3>الربط:</h3>
+                <p><strong>من البوابات البسيطة إلى نظام حاسوب كامل!</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 28: Homework -->
+        <div class="slide">
+            <h1><span class="emoji">📚</span> الواجب والمذاكرة</h1>
+            <div class="binary-conversion">
+                <h3>الواجب الأسبوعي:</h3>
+                <div class="truth-table">التحويل:
+- حول لثنائي: 27, 64, 100
+- حول لعشري: 1110, 10101, 11111
+
+العمليات:
+- 1010 + 1101
+- 10000 - 1001
+
+التصميم:
+- صمم دائرة إنذار سيارة</div>
+            </div>
+            <div class="success-box">
+                <h3>🔬 للتجريب:</h3>
+                <p>• جرب CircuitVerse.org</p>
+                <p>• صمم Half Adder بنفسك</p>
+                <p>• اختبر XOR مع حالات مختلفة</p>
+            </div>
+        </div>
+
+        <!-- Slide 29: Key Points -->
+        <div class="slide">
+            <h1><span class="emoji">🎯</span> النقاط الرئيسية</h1>
+            <div class="success-box">
+                <h3>🔑 تذكر دائماً:</h3>
+                <p>• كل شيء في الحاسوب = 0 و 1</p>
+                <p>• البوابات المنطقية أساس كل التكنولوجيا</p>
+                <p>• النظام الثنائي لغة الآلة</p>
+            </div>
+            <div class="example-box">
+                <h3>🚀 المعادلة:</h3>
+                <div class="truth-table">فهم المبادئ + ممارسة التطبيق = مهندس ناجح</div>
+            </div>
+            <div class="warning-box">
+                <h3>💡 الحكمة:</h3>
+                <p><strong>"أعقد الأنظمة تُبنى من أبسط المكونات"</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 30: Thank You -->
+        <div class="slide">
+            <h1><span class="emoji">🙏</span> شكراً لحسن استماعكم</h1>
+            <h2><span class="emoji">❓</span> أسئلة ومناقشة</h2>
+            <div class="example-box">
+                <h3>للتواصل:</h3>
+                <p><span class="emoji">📧</span> m.rashidi@iumedu.org</p>
+                <p><span class="emoji">🏢</span> ساعات المكتب: الأحد والثلاثاء 2:00-4:00</p>
+                <p><span class="emoji">💬</span> منصة التعلم: Blackboard/Canvas</p>
+                <p><span class="emoji">🌐</span> محاكاة الدوائر: CircuitVerse.org</p>
+            </div>
+            <div class="success-box">
+                <h2>رسالة أخيرة:</h2>
+                <h3><span class="highlight">"من البوابات المنطقية إلى الذكاء الاصطناعي - كل رحلة تبدأ بخطوة"</span></h3>
+            </div>
+            <div class="warning-box">
+                <h1><span class="emoji">⚡</span> كل إنجاز تكنولوجي بدأ بفهم 0 و 1! <span class="emoji">⚡</span></h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button onclick="previousSlide()">السابق</button>
+        <button onclick="nextSlide()">التالي</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            document.getElementById('currentSlide').textContent = index + 1;
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        function previousSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>

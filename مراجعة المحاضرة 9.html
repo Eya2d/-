@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ورقة مراجعة سريعة — محاضرة 9 (LA4CS)</title>
+<style>
+  :root{
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --success-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --bg: #f8fafc;
+    --text: #1e293b;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --border: rgba(148, 163, 184, 0.2);
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --math-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  * { box-sizing: border-box; }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
+    color: var(--text);
+    font: 14px/1.6 "Tajawal", "Cairo", "Noto Kufi Arabic", "Amiri", Arial, sans-serif;
+  }
+  
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    padding: 16mm 16mm 22mm;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+  }
+  
+  header {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 8mm;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+    animation: rotate 20s linear infinite;
+  }
+  
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+  
+  .hgroup {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hgroup h1 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 900;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hgroup .meta {
+    color: #64748b;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .badge {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  section {
+    margin: 8mm 0;
+  }
+  
+  h2 {
+    margin: 0 0 15px;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  h2:nth-of-type(4n+1) { background: var(--primary-gradient); }
+  h2:nth-of-type(4n+2) { background: var(--secondary-gradient); }
+  h2:nth-of-type(4n+3) { background: var(--accent-gradient); }
+  h2:nth-of-type(4n) { background: var(--success-gradient); }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+  
+  .cols-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .card:hover::before {
+    opacity: 1;
+  }
+  
+  ul {
+    margin: 0;
+    padding-inline-start: 20px;
+    list-style: none;
+  }
+  
+  li {
+    margin: 8px 0;
+    position: relative;
+    padding-inline-start: 25px;
+    line-height: 1.7;
+  }
+  
+  li::before {
+    content: '◆';
+    position: absolute;
+    right: 0;
+    color: #667eea;
+    font-weight: bold;
+    animation: sparkle 3s ease-in-out infinite;
+  }
+  
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .formula {
+    font-family: "JetBrains Mono", "Fira Code", "DejaVu Sans Mono", monospace;
+    direction: ltr;
+    display: inline-block;
+    background: var(--math-bg);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    margin: 0 4px;
+  }
+  
+  .note {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f3e5f5 100%);
+    border-left: 4px solid #667eea;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 12px;
+    color: #475569;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .note::before {
+    content: '💡';
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 16px;
+  }
+  
+  .pill {
+    background: var(--success-gradient);
+    color: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+  }
+  
+  .warning {
+    background: var(--warning-gradient);
+    color: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(250, 112, 154, 0.3);
+    position: relative;
+  }
+  
+  .warning::before {
+    content: '⚠️';
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 16px;
+  }
+  
+  footer {
+    position: absolute;
+    left: 14mm;
+    bottom: 10mm;
+    right: 14mm;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #64748b;
+    font-size: 11px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  
+  .logo-container {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+  }
+  
+  .logo-container svg {
+    height: 50px;
+    width: auto;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  }
+  
+  strong {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+  
+  em {
+    color: #f5576c;
+    font-style: normal;
+    font-weight: 600;
+  }
+  
+  @media print {
+    @page { size: A4; margin: 10mm; }
+    .page { width: auto; min-height: auto; padding: 0; }
+    header { margin-bottom: 6mm; }
+    .card:hover::before, .badge { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="hgroup">
+        <h1>ورقة مراجعة سريعة — محاضرة 9 (الأسبوع 10)</h1>
+        <div class="meta">
+          الرياضيات المتقطعة / LA4CS — تطبيقات المصفوفات — د. محمد رشيدي عبده 
+          <span class="badge">جاهزة للطباعة</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <h2>1) خوارزمية الحذف الغاوسي (Gaussian) لحل <span class="formula">Ax = b</span></h2>
+        <ul>
+          <li><strong>العمليات الصفية المسموحة:</strong> تبديل صفوف، ضرب صف في عدد ≠0، إضافة مضاعف صف إلى صف آخر.</li>
+          <li>شكِّل المصفوفة الموسعة <span class="formula">[A|b]</span> ثم نفِّذ <em>Forward Elimination</em> حتى الوصول إلى الشكل السُلّمي المختزل (RREF اختياري).</li>
+          <li><strong>التعويض العكسي:</strong> حُلّ من آخر معادلة إلى الأولى، أو استخدم Gauss-Jordan للحصول على الحل مباشرة.</li>
+          <li class="pill"><strong>شرط الوجود والوحدانية:</strong> إذا كان <span class="formula">rank(A) = rank([A|b])</span> ⇒ يوجد حل. إذا كان <span class="formula">rank(A) = n</span> ⇒ الحل وحيد و <span class="formula">A</span> قابلة للعكس.</li>
+        </ul>
+        <div class="note">نصيحة: إذا ظهر صف من الأصفار مقابل حد أيمن غير صفري ⇒ <em>لا يوجد حل</em>.</div>
+      </div>
+
+      <div class="card">
+        <h2>مثال توضيحي (2×2)</h2>
+        <ul>
+          <li><span class="formula">[[2,1],[1,1]] x = [5,3]ᵀ</span></li>
+          <li>من المعادلة الثانية: <span class="formula">x + y = 3 ⇒ x = 3 - y</span></li>
+          <li>التعويض في الأولى: <span class="formula">2(3 - y) + y = 5 ⇒ y = 1, x = 2</span></li>
+          <li><strong>النتيجة:</strong> <span class="formula">x = [2,1]ᵀ</span></li>
+        </ul>
+        <div class="note">بديل سريع: إذا كان <span class="formula">det(A) ≠ 0</span> يمكن استخدام <span class="formula">x = A⁻¹b</span>، لكن الحذف الغاوسي أعم وأكثر استقراراً عددياً.</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>2) طريقة أقل المربعات (Least Squares)</h2>
+        <ul>
+          <li><strong>الغرض:</strong> عندما يكون <span class="formula">m > n</span> نبحث عن <span class="formula">x*</span> التي تُقلل <span class="formula">∥Ax - b∥₂</span>.</li>
+          <li><strong>المعادلات العادية:</strong> <span class="formula">AᵀA x = Aᵀ b</span> (إذا كانت أعمدة <span class="formula">A</span> مستقلة خطياً).</li>
+          <li><strong>الحل:</strong> <span class="formula">x* = (AᵀA)⁻¹ Aᵀ b</span> — عملياً يُفضَّل <strong>QR/SVD</strong> للاستقرار العددي.</li>
+          <li><strong>التفسير الهندسي:</strong> <span class="formula">Ax*</span> هو الإسقاط العمودي لـ <span class="formula">b</span> على فضاء الأعمدة <span class="formula">col(A)</span>.</li>
+        </ul>
+        <div class="warning">تجنب حساب <span class="formula">(AᵀA)⁻¹</span> مباشرة إذا كانت المصفوفة سيئة الحالة.</div>
+      </div>
+      
+      <div class="card">
+        <h2>مثال: ملاءمة خط مستقيم</h2>
+        <ul>
+          <li>النقاط: <span class="formula">(0,1), (1,2), (2,2)</span></li>
+          <li>النموذج: <span class="formula">y ≈ α + βx</span> ⇒ <span class="formula">X = [[1,0],[1,1],[1,2]], y = [1,2,2]ᵀ</span></li>
+          <li><span class="formula">XᵀX = [[3,3],[3,5]], Xᵀy = [5,6]ᵀ ⇒ β = 0.5, α ≈ 1.1667</span></li>
+          <li><strong>النتيجة:</strong> <span class="formula">y ≈ 1.1667 + 0.5x</span></li>
+        </ul>
+        <div class="note">للبرمجة: استخدم <span class="formula">numpy.linalg.lstsq</span> أو تحليل <span class="formula">QR</span>.</div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>3) مصفوفات الدوران (2D) والتحويلات المتجانسة</h2>
+        <ul>
+          <li><strong>الدوران بزاوية θ:</strong> <span class="formula">R(θ) = [[cos θ, -sin θ],[sin θ, cos θ]]</span></li>
+          <li><strong>الإحداثيات المتجانسة (3×3):</strong> الإزاحة <span class="formula">T(tₓ,tᵧ)</span>، التكبير <span class="formula">S(sₓ,sᵧ)</span>، الدوران <span class="formula">R(θ)</span> كأجزاء من مصفوفة 3×3.</li>
+          <li><strong>التركيب:</strong> ضرب المصفوفات يُطبق من اليمين إلى اليسار (الآخر يُنفذ أولاً على المتجه).</li>
+        </ul>
+        <div class="pill"><strong>خصائص مهمة:</strong> مصفوفات الدوران متعامدة: <span class="formula">RᵀR = I</span> و <span class="formula">det(R) = 1</span>.</div>
+      </div>
+      
+      <div class="card">
+        <h2>مثال دوران</h2>
+        <ul>
+          <li>النقطة <span class="formula">(1,0)</span>، زاوية <span class="formula">90°</span> عكس عقارب الساعة</li>
+          <li>المصفوفة: <span class="formula">R(90°) = [[0,-1],[1,0]]</span></li>
+          <li>القاعدة: <span class="formula">(x,y) → (-y,x)</span> ⇒ <span class="formula">(1,0) → (0,1)</span></li>
+          <li>التحقق: <span class="formula">R(90°)[1,0]ᵀ = [0,1]ᵀ</span></li>
+        </ul>
+        <div class="note"><strong>تحويل الوحدات:</strong> <span class="formula">π راديان = 180°</span>, إذن <span class="formula">90° = π/2 راديان</span>.</div>
+      </div>
+    </section>
+
+    <section class="cols-3">
+      <div class="card">
+        <h2>4) الرتبة والمعكوس — مراجعة سريعة</h2>
+        <ul>
+          <li><span class="formula">A</span> قابلة للعكس ⇔ <span class="formula">rank(A) = n</span> ⇔ <span class="formula">det(A) ≠ 0</span></li>
+          <li>اختبار التناسق: <span class="formula">rank(A) = rank([A|b])</span></li>
+          <li>إيجاد <span class="formula">A⁻¹</span>: حوِّل <span class="formula">[A|I]</span> إلى <span class="formula">[I|A⁻¹]</span> بالعمليات الصفية</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <h2>5) أخطاء شائعة يجب تجنبها</h2>
+        <ul>
+          <li>محاولة عكس مصفوفة منفردة (غير قابلة للعكس)</li>
+          <li>الاعتماد على <span class="formula">AᵀA</span> رغم سوء الحالة — استخدم <strong>QR</strong></li>
+          <li>نسيان ترتيب تركيب التحويلات في الرسوميات</li>
+          <li>الخلط بين الراديان والدرجات في الدوران</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <h2>6) مراجع الصفحات (LA4CS)</h2>
+        <ul>
+          <li><strong>الحذف الغاوسي:</strong> الفصل 4 ⇒ ص 63-72 (+73-75 أمثلة)</li>
+          <li><strong>الرتبة/Gauss-Jordan/المعكوس:</strong> الفصل 5 ⇒ ص 89-99</li>
+          <li><strong>التحويلات والدوران:</strong> الفصل 7 ⇒ ص 141-144</li>
+          <li><strong>أقل المربعات/الإسقاط/الانحدار:</strong> الفصل 10 ⇒ ص 176-186</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <span>الجامعة الإسلامية بولاية منيسوتا — كلية الحاسوب وتقنية المعلومات • محاضرة 9 (الأسبوع 10)</span>
+      <div class="logo-container">
+        <svg class="logo" width="80" height="60" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- الشكل الثماني الخارجي -->
+          <defs>
+            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#4facfe"/>
+              <stop offset="100%" style="stop-color:#00f2fe"/>
+            </linearGradient>
+          </defs>
+          <path d="M200 20 L160 50 L130 90 L130 150 L160 190 L200 220 L240 190 L270 150 L270 90 L240 50 Z" 
+                fill="url(#logoGradient)" stroke="#1e293b" stroke-width="2"/>
+          
+          <!-- الكتاب في المنتصف -->
+          <path d="M180 100 L220 100 L220 140 L200 130 L180 140 Z" 
+                fill="#fff" stroke="#1e293b" stroke-width="2"/>
+          <line x1="200" y1="100" x2="200" y2="130" stroke="#1e293b" stroke-width="1"/>
+          <line x1="185" y1="110" x2="195" y2="110" stroke="#1e293b" stroke-width="1"/>
+          <line x1="205" y1="110" x2="215" y2="110" stroke="#1e293b" stroke-width="1"/>
+          <line x1="185" y1="120" x2="195" y2="120" stroke="#1e293b" stroke-width="1"/>
+          <line x1="205" y1="120" x2="215" y2="120" stroke="#1e293b" stroke-width="1"/>
+          
+          <!-- القلم في الأعلى -->
+          <path d="M200 20 L195 45 L205 45 Z" fill="#1e293b"/>
+          <circle cx="200" cy="40" r="3" fill="#4facfe"/>
+          
+          <!-- النص العربي -->
+          <text x="200" y="180" text-anchor="middle" font-family="Arabic, serif" font-size="12" fill="#1e293b">
+            الجامعة الإسلامية لولاية منيسوتا
+          </text>
+          <text x="200" y="200" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#64748b">
+            Islamic University of Minnesota
+          </text>
+        </svg>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

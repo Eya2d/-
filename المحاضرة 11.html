@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجبر البوليني - د. محمد رشيدي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            max-width: 90%;
+            max-height: 85vh;
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 12px;
+            color: #ffd700;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #87ceeb;
+        }
+
+        h4 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            color: #98fb98;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .emoji {
+            font-size: 1.5em;
+            margin-left: 10px;
+        }
+
+        pre, code {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            margin: 20px 0;
+            text-align: right;
+            direction: ltr;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+            font-size: 1.2em;
+        }
+
+        th {
+            background: rgba(255,255,255,0.2);
+            font-weight: bold;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .controls button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .controls button:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1.1em;
+        }
+
+        .university-logo {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .university-logo:hover {
+            opacity: 1;
+        }
+
+        .logo-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .goals-list {
+            text-align: right;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .goals-list li {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .example-box {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-right: 4px solid #ffd700;
+        }
+
+        .highlight {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .truth-table {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.4);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px auto;
+            width: 90%;
+            max-width: 600px;
+            font-size: 0.9em;
+            white-space: pre;
+            overflow-x: auto;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .truth-table pre {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            text-align: left;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body>
+    <!-- University Logo -->
+    <div class="university-logo">
+        <svg class="logo-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Star-shaped frame -->
+            <path d="M200 40 L220 100 L280 100 L235 140 L255 200 L200 170 L145 200 L165 140 L120 100 L180 100 Z" 
+                  fill="#87CEEB" stroke="#2c3e50" stroke-width="6"/>
+            
+            <!-- Inner decoration -->
+            <path d="M200 60 L210 80 L190 80 Z" fill="#2c3e50"/>
+            <circle cx="200" cy="90" r="3" fill="#2c3e50"/>
+            
+            <!-- Book/Knowledge symbol -->
+            <path d="M170 120 Q200 110 230 120 Q230 150 200 160 Q170 150 170 120" 
+                  fill="none" stroke="#2c3e50" stroke-width="3"/>
+            <line x1="180" y1="130" x2="220" y2="130" stroke="#2c3e50" stroke-width="2"/>
+            <line x1="180" y1="140" x2="220" y2="140" stroke="#2c3e50" stroke-width="2"/>
+            <line x1="180" y1="150" x2="210" y2="150" stroke="#2c3e50" stroke-width="2"/>
+            
+            <!-- Arabic text placeholder -->
+            <text x="200" y="190" font-family="Arial" font-size="12" text-anchor="middle" fill="#2c3e50">
+                الجامعة الإسلامية بمنيسوتا
+            </text>
+            <text x="200" y="210" font-family="Arial" font-size="10" text-anchor="middle" fill="#2c3e50">
+                Islamic University of Minnesota
+            </text>
+        </svg>
+    </div>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">24</span>
+    </div>
+
+    <!-- Presentation Container -->
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>الجبر البوليني</h1>
+            <h2>(Boolean Algebra)</h2>
+            <h3>الرياضيات الحاسوبية</h3>
+            <h4>د/ محمد رشيدي</h4>
+            <p>كلية الحاسبات وتقنية المعلومات</p>
+            <p>الجامعة الإسلامية بولاية منيسوتا</p>
+        </div>
+
+        <!-- Slide 2: Objectives -->
+        <div class="slide">
+            <h1><span class="emoji">🎯</span> أهداف المحاضرة</h1>
+            <h3>بنهاية هذه المحاضرة ستكون قادراً على:</h3>
+            <ul class="goals-list">
+                <li><strong>فهم</strong> ما هو الجبر البوليني وأهميته في الحاسوب</li>
+                <li><strong>تطبيق</strong> العمليات الثلاث الأساسية: AND, OR, NOT</li>
+                <li><strong>استخدام</strong> قوانين الجبر البوليني لتبسيط المعادلات</li>
+                <li><strong>ربط</strong> المفاهيم بالتطبيقات العملية في البرمجة</li>
+            </ul>
+        </div>
+
+        <!-- Slide 3: What is Boolean Algebra -->
+        <div class="slide">
+            <h1><span class="emoji">🤔</span> ما هو الجبر البوليني؟</h1>
+            <div class="example-box">
+                <h2>تعريف بسيط:</h2>
+                <p>رياضيات تتعامل مع قيمتين فقط:</p>
+                <p><span class="highlight">صح (True)</span> ← نرمز لها بـ <span class="highlight">1</span></p>
+                <p><span class="highlight">خطأ (False)</span> ← نرمز لها بـ <span class="highlight">0</span></p>
+            </div>
+            <h2>أمثلة من حياتك اليومية:</h2>
+            <p><span class="emoji">💡</span> المصباح: <strong>مضيء (1)</strong> أو <strong>مطفأ (0)</strong></p>
+            <p><span class="emoji">🚪</span> الباب: <strong>مفتوح (1)</strong> أو <strong>مغلق (0)</strong></p>
+            <p><span class="emoji">☂️</span> الطقس: <strong>ممطر (1)</strong> أو <strong>مشمس (0)</strong></p>
+        </div>
+
+        <!-- Slide 4: Why Important -->
+        <div class="slide">
+            <h1><span class="emoji">🔧</span> لماذا مهم في الحاسوب؟</h1>
+            <div class="example-box">
+                <h2>الحاسوب يفهم فقط:</h2>
+                <p><strong>الكهرباء موجودة (1)</strong> أو <strong>غير موجودة (0)</strong></p>
+                <p><strong>البت (Bit):</strong> أصغر وحدة معلومات في الحاسوب</p>
+            </div>
+            <h2>التطبيقات:</h2>
+            <p><span class="emoji">🔍</span> <strong>محركات البحث:</strong> "Python AND Tutorial"</p>
+            <p><span class="emoji">🗃️</span> <strong>قواعد البيانات:</strong> WHERE age > 18 AND city = "Cairo"</p>
+            <p><span class="emoji">🔌</span> <strong>الدوائر الإلكترونية:</strong> تصميم المعالجات</p>
+            <p><span class="emoji">💻</span> <strong>البرمجة:</strong> if statements والشروط</p>
+        </div>
+
+        <!-- Slide 5: AND Operation -->
+        <div class="slide">
+            <h1><span class="emoji">⚡</span> العملية الأولى: AND (∧)</h1>
+            <div class="example-box">
+                <h2>الفكرة:</h2>
+                <p>تعطي <span class="highlight">1</span> فقط إذا كانت <span class="highlight">جميع</span> الشروط محققة</p>
+                <h3>مثال من الحياة:</h3>
+                <p>"للدخول للامتحان تحتاج <strong>بطاقة طالب</strong> AND <strong>إذن من الأستاذ</strong>"</p>
+            </div>
+            <div class="truth-table">
+                <h3>جدول الحقيقة:</h3>
+                <pre>A | B | A AND B | التعليق
+--|---|---------|----------
+0 | 0 |    0    |    
+0 | 1 |    0    | لو واحد صفر
+1 | 0 |    0    | لو واحد صفر  
+1 | 1 |    1    | الاتنين واحد!</pre>
+            </div>
+        </div>
+
+        <!-- Slide 6: OR Operation -->
+        <div class="slide">
+            <h1><span class="emoji">🔄</span> العملية الثانية: OR (∨)</h1>
+            <div class="example-box">
+                <h2>الفكرة:</h2>
+                <p>تعطي <span class="highlight">1</span> إذا كان <span class="highlight">أي شرط</span> أو <span class="highlight">أكثر</span> محقق</p>
+                <h3>مثال من الحياة:</h3>
+                <p>"يمكنك دخول النادي إذا كنت <strong>عضو</strong> OR <strong>ضيف VIP</strong>"</p>
+            </div>
+            <div class="truth-table">
+                <h3>جدول الحقيقة:</h3>
+                <pre>A | B | A OR B | التعليق
+--|---|--------|----------
+0 | 0 |   0    | الاتنين صفر
+1 | 0 |   1    | واحد منهم واحد
+0 | 1 |   1    | واحد منهم واحد
+1 | 1 |   1    | الاتنين واحد</pre>
+            </div>
+        </div>
+
+        <!-- Slide 7: NOT Operation -->
+        <div class="slide">
+            <h1><span class="emoji">🔄</span> العملية الثالثة: NOT (¬)</h1>
+            <div class="example-box">
+                <h2>الفكرة:</h2>
+                <p><span class="highlight">اعكس</span> القيمة - حول الـ 1 لـ 0 والـ 0 لـ 1</p>
+                <h3>مثال من الحياة:</h3>
+                <p>"إذا لم تكن <strong>مريض</strong> يمكنك السفر"</p>
+                <code>يمكن السفر = NOT مريض</code>
+            </div>
+            <div class="truth-table">
+                <h3>جدول الحقيقة:</h3>
+                <pre>A | NOT A | التعليق
+--|-------|----------
+0 |   1   | صفر يصبح واحد
+1 |   0   | واحد يصبح صفر</pre>
+            </div>
+        </div>
+
+        <!-- Slide 8: Quick Exercise -->
+        <div class="slide">
+            <h1><span class="emoji">🧠</span> تمرين سريع (1)</h1>
+            <div class="example-box">
+                <h2>المعطيات:</h2>
+                <p>A = 1 (صح)</p>
+                <p>B = 0 (خطأ)</p>
+                <h2>احسب:</h2>
+                <p>1. A AND B = ؟</p>
+                <p>2. A OR B = ؟</p>
+                <p>3. NOT A = ؟</p>
+                <p>4. NOT B = ؟</p>
+            </div>
+            <h2><span class="emoji">💭</span> خذ دقيقة للحل...</h2>
+        </div>
+
+        <!-- Slide 9: Exercise Solutions -->
+        <div class="slide">
+            <h1><span class="emoji">✅</span> الحلول:</h1>
+            <div class="example-box">
+                <h2>المعطيات: A = 1, B = 0</h2>
+                <div class="truth-table">
+                    <pre>
+1. A AND B = 1 AND 0 = <span class="highlight">0</span>
+   (لازم الاتنين يكونوا 1)
+
+2. A OR B = 1 OR 0 = <span class="highlight">1</span>
+   (يكفي واحد منهم يكون 1)
+
+3. NOT A = NOT 1 = <span class="highlight">0</span>
+   (عكس الـ 1)
+
+4. NOT B = NOT 0 = <span class="highlight">1</span>
+   (عكس الـ 0)
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Real Life Example - Traffic Lights -->
+        <div class="slide">
+            <h1><span class="emoji">🚦</span> مثال من الحياة: إشارات المرور</h1>
+            <div class="example-box">
+                <h2>المتغيرات:</h2>
+                <p><strong>G</strong> = الضوء الأخضر مضيء (1) أو مطفأ (0)</p>
+                <p><strong>R</strong> = الضوء الأحمر مضيء (1) أو مطفأ (0)</p>
+                <p><strong>C</strong> = سيارة موجودة (1) أو غير موجودة (0)</p>
+            </div>
+            <h2>متى يمكن للسيارة المرور؟</h2>
+            <div class="truth-table">
+                <pre>
+السيارة تعبر = G AND C AND (NOT R)
+                </pre>
+            </div>
+            <p><strong>المعنى:</strong> السيارة تعبر إذا كان الضوء أخضر AND سيارة موجودة AND الضوء الأحمر مطفأ</p>
+        </div>
+
+        <!-- Slide 11: Traffic Light Exercise -->
+        <div class="slide">
+            <h1><span class="emoji">🚗</span> تمرين إشارات المرور</h1>
+            <div class="example-box">
+                <h2>الحالات المختلفة:</h2>
+                <table>
+                    <tr><th>G</th><th>R</th><th>C</th><th>NOT R</th><th>النتيجة</th><th>الحالة</th></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1 AND 1 AND 1 = 1</td><td>✅ تعبر</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>1 AND 1 AND 0 = 0</td><td>❌ لا تعبر</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0 AND 1 AND 1 = 0</td><td>❌ لا تعبر</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1 AND 0 AND 1 = 0</td><td>❌ لا تعبر</td></tr>
+                </table>
+            </div>
+            <p>لاحظ أن السيارة تعبر فقط في حالة واحدة من 4!</p>
+        </div>
+
+        <!-- Slide 12: Complex Example - ATM System -->
+        <div class="slide">
+            <h1><span class="emoji">🏧</span> مثال معقد: نظام الصراف الآلي</h1>
+            <div class="example-box">
+                <h2>متى يعطي الصراف الأموال؟</h2>
+                <p><strong>شروط السحب:</strong></p>
+                <ul style="text-align: right; max-width: 600px; margin: 0 auto;">
+                    <li>البطاقة صحيحة (V = Valid Card)</li>
+                    <li>الرقم السري صحيح (P = PIN Correct)</li>
+                    <li>الرصيد كافي (B = Balance Sufficient)</li>
+                    <li>الصراف يعمل (M = Machine Working)</li>
+                </ul>
+            </div>
+            <div class="truth-table">
+                <h3>المعادلة:</h3>
+                <pre>
+إعطاء الأموال = V AND P AND B AND M
+                </pre>
+            </div>
+            <p><strong>لو أي شرط غير محقق = لا يعطي أموال!</strong></p>
+        </div>
+
+        <!-- Slide 13: ATM Truth Table -->
+        <div class="slide">
+            <h1><span class="emoji">📊</span> جدول حقيقة الصراف الآلي</h1>
+            <div style="max-height: 80vh; overflow-y: auto;">
+                <table style="font-size: 0.9em;">
+                    <tr><th>V</th><th>P</th><th>B</th><th>M</th><th>النتيجة</th><th>الحالة</th></tr>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>❌ بطاقة خطأ</td></tr>
+                    <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>❌ بطاقة خطأ</td></tr>
+                    <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>❌ بطاقة خطأ</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>❌ بطاقة خطأ</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>❌ PIN خطأ</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>❌ رصيد غير كافي</td></tr>
+                    <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>❌ الصراف معطل</td></tr>
+                    <tr style="background: rgba(0,255,0,0.2);"><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>✅ السحب ناجح!</td></tr>
+                </table>
+            </div>
+            <p><strong>15 حالة فشل، حالة واحدة فقط نجاح!</strong></p>
+        </div>
+
+        <!-- Slide 14: Boolean Laws Introduction -->
+        <div class="slide">
+            <h1><span class="emoji">📐</span> قوانين الجبر البوليني</h1>
+            <div class="example-box">
+                <h2>لماذا نحتاج القوانين؟</h2>
+                <p>لتبسيط المعادلات المعقدة وتوفير الوقت والموارد</p>
+                <h3>مثال:</h3>
+                <code>A AND (B OR NOT B)</code>
+                <p>هذا يبدو معقد، لكن يمكن تبسيطه لـ:</p>
+                <code class="highlight">A</code>
+            </div>
+            <h2>القوانين الأساسية:</h2>
+            <p>1. قوانين الهوية</p>
+            <p>2. قوانين النفي</p>
+            <p>3. قوانين دي مورجان</p>
+        </div>
+
+        <!-- Slide 15: Identity Laws -->
+        <div class="slide">
+            <h1><span class="emoji">🆔</span> قوانين الهوية</h1>
+            <div class="truth-table">
+                <h2>مع الرقم 1:</h2>
+                <pre>
+A AND 1 = A    (أي شيء مع 1 = نفسه)
+A OR 1 = 1     (أي شيء مع 1 = 1)
+                </pre>
+                <h2>مع الرقم 0:</h2>
+                <pre>
+A AND 0 = 0    (أي شيء مع 0 = 0)
+A OR 0 = A     (أي شيء مع 0 = نفسه)
+                </pre>
+            </div>
+            <div class="example-box">
+                <h3>مثال عملي:</h3>
+                <p><strong>السؤال:</strong> هل يمكن للطالب دخول المكتبة إذا كان لديه تصريح AND المكتبة مفتوحة دائماً؟</p>
+                <p><strong>المعادلة:</strong> الدخول = تصريح AND 1</p>
+                <p><strong>النتيجة:</strong> الدخول = تصريح (القانون: A AND 1 = A)</p>
+            </div>
+        </div>
+
+        <!-- Slide 16: Negation Laws -->
+        <div class="slide">
+            <h1><span class="emoji">🔄</span> قوانين النفي</h1>
+            <div class="truth-table">
+                <pre>
+A AND NOT A = 0    (المتناقضات = مستحيل)
+A OR NOT A = 1     (أحد الاحتمالين = أكيد)
+NOT (NOT A) = A    (عكس العكس = الأصل)
+                </pre>
+            </div>
+            <div class="example-box">
+                <h3>أمثلة من الحياة:</h3>
+                <p><strong>المثال 1:</strong> "الطقس ممطر AND الطقس غير ممطر" = 0 (مستحيل)</p>
+                <p><strong>المثال 2:</strong> "الطقس ممطر OR الطقس غير ممطر" = 1 (أكيد)</p>
+                <p><strong>المثال 3:</strong> "ليس (ليس ممطر)" = "ممطر"</p>
+            </div>
+            <h2><span class="emoji">💡</span> هذه القوانين منطقية جداً!</h2>
+        </div>
+
+        <!-- Slide 17: De Morgan's Laws Detailed -->
+        <div class="slide">
+            <h1><span class="emoji">⚖️</span> قوانين دي مورجان (تفصيلي)</h1>
+            <div class="example-box">
+                <h2>القانون الأول:</h2>
+                <code>NOT (A AND B) = (NOT A) OR (NOT B)</code>
+                <h3>مثال:</h3>
+                <p>"ليس (غني AND ذكي)" = "(ليس غني) OR (ليس ذكي)"</p>
+                <p><strong>المعنى:</strong> إذا لم يكن غني وذكي معاً، فهو إما غير غني أو غير ذكي (أو كلاهما)</p>
+            </div>
+            <div class="example-box">
+                <h2>القانون الثاني:</h2>
+                <code>NOT (A OR B) = (NOT A) AND (NOT B)</code>
+                <h3>مثال:</h3>
+                <p>"ليس (مطر OR ثلج)" = "(ليس مطر) AND (ليس ثلج)"</p>
+                <p><strong>المعنى:</strong> إذا لم يكن هناك مطر أو ثلج، فلا يوجد مطر وأيضاً لا يوجد ثلج</p>
+            </div>
+        </div>
+
+        <!-- Slide 18: De Morgan's Proof -->
+        <div class="slide">
+            <h1><span class="emoji">🔍</span> إثبات قانون دي مورجان</h1>
+            <h2>لنثبت: NOT (A OR B) = (NOT A) AND (NOT B)</h2>
+            <table>
+                <tr><th>A</th><th>B</th><th>A OR B</th><th>NOT (A OR B)</th><th>NOT A</th><th>NOT B</th><th>(NOT A) AND (NOT B)</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td class="highlight">1</td><td>1</td><td>1</td><td class="highlight">1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td class="highlight">0</td><td>1</td><td>0</td><td class="highlight">0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td class="highlight">0</td><td>0</td><td>1</td><td class="highlight">0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td class="highlight">0</td><td>0</td><td>0</td><td class="highlight">0</td></tr>
+            </table>
+            <div class="example-box">
+                <p><strong>النتيجة:</strong> العمودان المظللان متطابقان تماماً!</p>
+                <p><strong>إذن القانون صحيح ✅</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Simplification Example 1 -->
+        <div class="slide">
+            <h1><span class="emoji">🔧</span> تمرين التبسيط (1)</h1>
+            <div class="example-box">
+                <h2>بسط المعادلة:</h2>
+                <code>F = A AND (B OR NOT B)</code>
+                <h3>خطوات الحل:</h3>
+                <div class="truth-table">
+                    <pre>
+الخطوة 1: B OR NOT B = ؟
+          (استخدم قانون النفي)
+
+الخطوة 2: A AND [النتيجة] = ؟
+          (استخدم قانون الهوية)
+                    </pre>
+                </div>
+            </div>
+            <h2><span class="emoji">💭</span> جرب بنفسك أولاً...</h2>
+        </div>
+
+        <!-- Slide 20: Simplification Solution 1 -->
+        <div class="slide">
+            <h1><span class="emoji">✅</span> حل التبسيط (1)</h1>
+            <div class="truth-table">
+                <pre>
+F = A AND (B OR NOT B)
+
+<span class="highlight">الخطوة 1:</span> B OR NOT B = 1
+           (لأن أي متغير مع نفيه = 1)
+
+<span class="highlight">الخطوة 2:</span> A AND 1 = A
+           (لأن أي متغير مع 1 = نفسه)
+
+<span class="highlight">النتيجة النهائية:</span> F = A
+                </pre>
+            </div>
+            <div class="example-box">
+                <h2><span class="emoji">🎉</span> بسطنا معادلة معقدة!</h2>
+                <p>من <code>A AND (B OR NOT B)</code> إلى <code>A</code> فقط!</p>
+                <p><strong>الفائدة:</strong> توفير في الدوائر الإلكترونية والذاكرة</p>
+            </div>
+        </div>
+
+        <!-- Slide 21: Simplification Example 2 -->
+        <div class="slide">
+            <h1><span class="emoji">🔧</span> تمرين التبسيط (2)</h1>
+            <div class="example-box">
+                <h2>بسط المعادلة:</h2>
+                <code>G = (A OR B) AND (A OR NOT B)</code>
+                <h3>نصيحة للحل:</h3>
+                <p>استخدم خاصية التوزيع: (A OR B) AND (A OR C) = A OR (B AND C)</p>
+            </div>
+            <div class="truth-table">
+                <h3>أو حل بجدول الحقيقة:</h3>
+                <table>
+                    <tr><th>A</th><th>B</th><th>NOT B</th><th>A OR B</th><th>A OR NOT B</th><th>النتيجة</th></tr>
+                    <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                </table>
+            </div>
+            <h3>ما النمط الذي تلاحظه؟</h3>
+        </div>
+
+        <!-- Slide 22: Simplification Solution 2 -->
+        <div class="slide">
+            <h1><span class="emoji">✅</span> حل التبسيط (2)</h1>
+            <div class="truth-table">
+                <pre>
+G = (A OR B) AND (A OR NOT B)
+
+<span class="highlight">الطريقة الأولى - التوزيع:</span>
+G = A OR (B AND NOT B)
+G = A OR 0               (لأن B AND NOT B = 0)
+G = A                   (لأن A OR 0 = A)
+
+<span class="highlight">الطريقة الثانية - جدول الحقيقة:</span>
+لاحظ أن النتيجة = 1 عندما A = 1
+والنتيجة = 0 عندما A = 0
+إذن G = A
+                </pre>
+            </div>
+            <div class="example-box">
+                <h2>الدرس المستفاد:</h2>
+                <p><strong>طرق متعددة للحل،</strong> نفس النتيجة!</p>
+                <p>اختر الطريقة الأسهل لك</p>
+            </div>
+        </div>
+
+        <!-- Slide 23: Programming Application -->
+        <div class="slide">
+            <h1><span class="emoji">💻</span> تطبيق في البرمجة</h1>
+            <div class="example-box">
+                <h2>مثال Python متقدم:</h2>
+                <div class="truth-table">
+                    <pre style="direction: ltr; text-align: left;">
+# نظام صلاحيات المستخدم
+def can_access_file(user_role, file_owner, is_public, has_permission):
+    # يمكن الوصول إذا:
+    # 1. المستخدم هو المالك
+    # 2. أو الملف عام
+    # 3. أو لديه صلاحية خاصة والملف ليس حساس
+    
+    is_owner = (user_role == file_owner)
+    has_special_access = has_permission and not is_sensitive_file()
+    
+    access = is_owner or is_public or has_special_access
+    return access
+
+# أمثلة الاستخدام
+print(can_access_file("admin", "admin", False, True))    # True
+print(can_access_file("user", "admin", True, False))     # True  
+print(can_access_file("user", "admin", False, False))    # False
+                    </pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Database Application -->
+        <div class="slide">
+            <h1><span class="emoji">🗃️</span> تطبيق في قواعد البيانات</h1>
+            <div class="example-box">
+                <h2>مثال SQL متقدم:</h2>
+                <div class="truth-table">
+                    <pre style="direction: ltr; text-align: left;">
+-- البحث عن الطلاب المؤهلين للمنحة
+SELECT student_name, gpa, income_level
+FROM students 
+WHERE (gpa >= 3.5 AND income_level = 'low')
+   OR (gpa >= 3.0 AND income_level = 'very_low' AND has_job = false)
+   OR (gpa >= 3.8 AND extra_activities >= 3)
+ORDER BY gpa DESC;
+                    </pre>
+                </div>
+                <h3>الترجمة البولياني:</h3>
+                <p><strong>منحة =</strong> (معدل عالي AND دخل منخفض) OR (معدل متوسط AND دخل قليل جداً AND بدون عمل) OR (معدل ممتاز AND أنشطة كثيرة)</p>
+            </div>
+        </div>
+
+        <!-- Slide 25: Search Engine Application -->
+        <div class="slide">
+            <h1><span class="emoji">🔍</span> تطبيق في محركات البحث</h1>
+            <div class="example-box">
+                <h2>بحث متقدم في Google:</h2>
+                <div class="truth-table">
+                    <pre>
+البحث: (Python OR Java) AND "web development" 
+        AND NOT PHP AND NOT "old tutorial"
+                    </pre>
+                </div>
+                <h3>المعنى:</h3>
+                <p>صفحات تحتوي على <strong>(Python أو Java)</strong> و <strong>"web development"</strong> ولكن <strong>بدون PHP</strong> و <strong>بدون "old tutorial"</strong></p>
+            </div>
+            <div class="example-box">
+                <h2>مثال من YouTube:</h2>
+                <code>("machine learning" OR "artificial intelligence") AND Python AND NOT "for kids"</code>
+                <p>فيديوهات تعلم الآلة أو الذكاء الاصطناعي بـ Python، لكن ليس للأطفال</p>
+            </div>
+        </div>
+
+        <!-- Slide 26: Digital Circuits -->
+        <div class="slide">
+            <h1><span class="emoji">🔌</span> تطبيق في الدوائر الرقمية</h1>
+            <div class="example-box">
+                <h2>مثال: نظام إنذار المنزل الذكي</h2>
+                <h3>المتغيرات:</h3>
+                <p><strong>D:</strong> باب مفتوح | <strong>W:</strong> نافذة مفتوحة | <strong>M:</strong> حركة مكتشفة</p>
+                <p><strong>O:</strong> المالك في المنزل | <strong>A:</strong> النظام مُفعَّل</p>
+                <h3>متى يعمل الإنذار؟</h3>
+                <code>ALARM = A AND NOT O AND (D OR W OR M)</code>
+            </div>
+            <div class="truth-table">
+                <h3>حالات عملية:</h3>
+                <pre>
+الحالة 1: النظام مُفعَّل، المالك خارج، الباب مفتوح
+ALARM = 1 AND 1 AND 1 = 1 ✅ (إنذار!)
+
+الحالة 2: النظام مُفعَّل، المالك موجود، حركة
+ALARM = 1 AND 0 AND 1 = 0 ❌ (بدون إنذار)
+                </pre>
+            </div>
+        </div>
+
+        <!-- Slide 27: Comprehensive Exercise -->
+        <div class="slide">
+            <h1><span class="emoji">🏆</span> تمرين شامل</h1>
+            <div class="example-box">
+                <h2>مسألة: نظام دخول المختبر الذكي</h2>
+                <h3>الشروط:</h3>
+                <p>• يمكن الدخول للطالب أو الأستاذ</p>
+                <p>• ولديه بطاقة جامعية سارية</p>
+                <p>• وليس محظور من دخول المختبر</p>
+                <p>• والوقت ضمن ساعات العمل أو لديه تصريح خاص</p>
+                <h3>المتغيرات:</h3>
+                <p><strong>S:</strong> طالب | <strong>T:</strong> أستاذ | <strong>C:</strong> بطاقة سارية</p>
+                <p><strong>B:</strong> محظور | <strong>H:</strong> ساعات العمل | <strong>P:</strong> تصريح خاص</p>
+            </div>
+            <h2>اكتب المعادلة البولياني:</h2>
+            <code>الدخول = ؟</code>
+        </div>
+
+        <!-- Slide 28: Comprehensive Solution -->
+        <div class="slide">
+            <h1><span class="emoji">✅</span> حل التمرين الشامل</h1>
+            <div class="truth-table">
+                <pre>
+<span class="highlight">تحليل الشروط:</span>
+1. طالب أو أستاذ: (S OR T)
+2. بطاقة سارية: C
+3. ليس محظور: NOT B  
+4. في ساعات العمل أو تصريح خاص: (H OR P)
+
+<span class="highlight">المعادلة النهائية:</span>
+الدخول = (S OR T) AND C AND (NOT B) AND (H OR P)
+                </pre>
+            </div>
+            <div class="example-box">
+                <h2>مثال عملي:</h2>
+                <p><strong>طالب، بطاقة سارية، غير محظور، خارج ساعات العمل، بدون تصريح:</strong></p>
+                <code>الدخول = 1 AND 1 AND 1 AND (0 OR 0) = 1 AND 1 AND 1 AND 0 = 0</code>
+                <p><strong>النتيجة:</strong> ❌ لا يمكن الدخول</p>
+            </div>
+        </div>
+
+        <!-- Slide 29: Optimization Example -->
+        <div class="slide">
+            <h1><span class="emoji">⚡</span> تحسين وتبسيط معقد</h1>
+            <div class="example-box">
+                <h2>بسط هذه المعادلة المعقدة:</h2>
+                <code>F = (A AND B) OR (A AND NOT B) OR (NOT A AND B)</code>
+                <h3>الطريقة الأولى - التوزيع:</h3>
+                <div class="truth-table">
+                    <pre>
+F = (A AND B) OR (A AND NOT B) OR (NOT A AND B)
+F = A AND (B OR NOT B) OR (NOT A AND B)
+F = A AND 1 OR (NOT A AND B)
+F = A OR (NOT A AND B)
+                    </pre>
+                </div>
+            </div>
+            <p>هل يمكن تبسيطها أكثر؟</p>
+        </div>
+
+        <!-- Slide 30: Optimization Solution -->
+        <div class="slide">
+            <h1><span class="emoji">🔍</span> حل التحسين</h1>
+            <div class="truth-table">
+                <pre>
+F = A OR (NOT A AND B)
+
+<span class="highlight">لنجرب جدول الحقيقة:</span>
+A | B | NOT A | NOT A AND B | A OR (NOT A AND B)
+--|---|-------|-------------|-------------------
+0 | 0 |   1   |      0      |         0
+0 | 1 |   1   |      1      |         1
+1 | 0 |   0   |      0      |         1
+1 | 1 |   0   |      0      |         1
+
+<span class="highlight">النمط:</span> النتيجة = 1 إذا كان A = 1 أو B = 1
+<span class="highlight">إذن:</span> F = A OR B
+                </pre>
+            </div>
+            <div class="example-box">
+                <h2>المعادلة الأصلية vs المبسطة:</h2>
+                <p><strong>قبل:</strong> (A AND B) OR (A AND NOT B) OR (NOT A AND B)</p>
+                <p><strong>بعد:</strong> A OR B</p>
+                <p><strong>توفير:</strong> 7 عمليات منطقية → عملية واحدة فقط! 🎉</p>
+            </div>
+        </div>
+
+        <!-- Slide 31: Real World Optimization -->
+        <div class="slide">
+            <h1><span class="emoji">🏭</span> تحسين في العالم الحقيقي</h1>
+            <div class="example-box">
+                <h2>مثال: نظام تكييف المكتب الذكي</h2>
+                <h3>المعادلة الأصلية المعقدة:</h3>
+                <code>تشغيل التكييف = (حار AND موجود أشخاص) OR (حار AND اجتماع مهم) OR (رطب AND موجود أشخاص)</code>
+                <h3>بعد التبسيط:</h3>
+                <code>تشغيل التكييف = (حار OR رطب) AND (موجود أشخاص OR اجتماع مهم)</code>
+            </div>
+            <div class="example-box">
+                <h2>الفوائد:</h2>
+                <p>• <strong>أقل استهلاك للطاقة</strong> في المعالج</p>
+                <p>• <strong>أسرع في الاستجابة</strong></p>
+                <p>• <strong>أقل تعقيداً في البرمجة</strong></p>
+                <p>• <strong>سهولة الصيانة</strong></p>
+            </div>
+        </div>
+
+        <!-- Slide 32: Advanced Example - Security System -->
+        <div class="slide">
+            <h1><span class="emoji">🛡️</span> مثال متقدم: نظام الأمان المتكامل</h1>
+            <div class="example-box">
+                <h2>متغيرات النظام:</h2>
+                <p><strong>F:</strong> مستشعر اللهب | <strong>S:</strong> مستشعر الدخان | <strong>M:</strong> مستشعر الحركة</p>
+                <p><strong>D:</strong> الأبواب | <strong>W:</strong> النوافذ | <strong>O:</strong> المالك موجود</p>
+                <p><strong>T:</strong> الوقت ليلاً | <strong>A:</strong> النظام مُفعَّل</p>
+            </div>
+            <div class="truth-table">
+                <h3>أنواع الإنذارات:</h3>
+                <pre>
+إنذار حريق = A AND (F OR S)
+إنذار سرقة = A AND NOT O AND (D OR W OR (M AND T))
+إنذار طوارئ = (إنذار حريق) OR (إنذار سرقة)
+                </pre>
+            </div>
+            <p>نظام معقد لكن منطقي! 🤖</p>
+        </div>
+
+        <!-- Slide 33: Security System Truth Table -->
+        <div class="slide">
+            <h1><span class="emoji">📋</span> جدول حالات نظام الأمان</h1>
+            <div style="font-size: 0.8em; max-height: 85vh; overflow-y: auto;">
+                <table>
+                    <tr><th>السيناريو</th><th>F</th><th>S</th><th>M</th><th>O</th><th>T</th><th>A</th><th>إنذار حريق</th><th>إنذار سرقة</th><th>النتيجة</th></tr>
+                    <tr><td>نهار عادي</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>✅ آمن</td></tr>
+                    <tr><td>حريق نهاراً</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>🔥 إنذار حريق</td></tr>
+                    <tr><td>دخان مع مالك</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>🔥 إنذار حريق</td></tr>
+                    <tr><td>حركة ليلاً بدون مالك</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>🚨 إنذار سرقة</td></tr>
+                    <tr><td>النظام معطل</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>😴 بدون إنذار</td></tr>
+                    <tr><td>حركة نهاراً بدون مالك</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>✅ آمن</td></tr>
+                </table>
+            </div>
+            <p><strong>النظام يميز بين أنواع التهديدات المختلفة!</strong></p>
+        </div>
+
+        <!-- Slide 34: Machine Learning Application -->
+        <div class="slide">
+            <h1><span class="emoji">🤖</span> تطبيق في التعلم الآلي</h1>
+            <div class="example-box">
+                <h2>مثال: تصفية الرسائل الإلكترونية</h2>
+                <h3>المتغيرات:</h3>
+                <p><strong>S:</strong> كلمات مشبوهة | <strong>L:</strong> روابط مشكوك فيها | <strong>A:</strong> مرفقات</p>
+                <p><strong>K:</strong> مرسل معروف | <strong>D:</strong> نطاق موثوق</p>
+            </div>
+            <div class="truth-table">
+                <h3>قرار التصفية:</h3>
+                <pre>
+رسالة مشبوهة = (S OR L OR A) AND NOT (K AND D)
+
+المعنى: الرسالة مشبوهة إذا كانت تحتوي على:
+(كلمات مشبوهة أو روابط مشكوك فيها أو مرفقات)
+و ليست من (مرسل معروف من نطاق موثوق)
+                </pre>
+            </div>
+            <div class="example-box">
+                <h3>أمثلة:</h3>
+                <p><strong>رسالة من صديق:</strong> S=0, L=0, A=1, K=1, D=1 → مشبوهة = 0 ✅</p>
+                <p><strong>رسالة غريبة بروابط:</strong> S=1, L=1, A=0, K=0, D=0 → مشبوهة = 1 ❌</p>
+            </div>
+        </div>
+
+        <!-- Slide 35: Game Development Application -->
+        <div class="slide">
+            <h1><span class="emoji">🎮</span> تطبيق في تطوير الألعاب</h1>
+            <div class="example-box">
+                <h2>مثال: نظام قتال في لعبة RPG</h2>
+                <h3>متغيرات اللاعب:</h3>
+                <p><strong>H:</strong> صحة > 20% | <strong>M:</strong> سحر > 30% | <strong>W:</strong> لديه سلاح</p>
+                <p><strong>E:</strong> عدو قريب | <strong>B:</strong> في معركة | <strong>S:</strong> تعويذة دفاعية نشطة</p>
+            </div>
+            <div class="truth-table">
+                <h3>قرارات اللعبة:</h3>
+                <pre>
+يمكن مهاجمة = H AND (W OR M) AND E
+يجب الهرب = (NOT H OR NOT W) AND E AND B
+استخدام سحر شفاء = NOT H AND M AND NOT B
+تفعيل الدفاع = E AND B AND M AND NOT S
+                </pre>
+            </div>
+            <div class="example-box">
+                <p><strong>مثال:</strong> لاعب صحة منخفضة، بدون سلاح، سحر متوفر، عدو قريب</p>
+                <code>H=0, W=0, M=1, E=1, B=1, S=0</code>
+                <p><strong>النتائج:</strong> لا يمكن مهاجمة ✅ يجب الهرب ✅ استخدام شفاء</p>
+            </div>
+        </div>
+
+        <!-- Slide 36: Common Mistakes -->
+        <div class="slide">
+            <h1><span class="emoji">⚠️</span> أخطاء شائعة في الجبر البوليني</h1>
+            <div class="example-box">
+                <h2>❌ خطأ شائع #1:</h2>
+                <p><strong>خطأ:</strong> A OR B AND C = (A OR B) AND C</p>
+                <p><strong>صحيح:</strong> A OR B AND C = A OR (B AND C)</p>
+                <p><strong>السبب:</strong> AND له أولوية أعلى من OR</p>
+            </div>
+            <div class="example-box">
+                <h2>❌ خطأ شائع #2:</h2>
+                <p><strong>خطأ:</strong> NOT A OR B = NOT (A OR B)</p>
+                <p><strong>صحيح:</strong> NOT A OR B = (NOT A) OR B</p>
+                <p><strong>السبب:</strong> NOT يؤثر على A فقط، ليس على العملية كاملة</p>
+            </div>
+            <div class="example-box">
+                <h2>❌ خطأ شائع #3:</h2>
+                <p><strong>خطأ:</strong> خلط بين AND و OR في الشروط اليومية</p>
+                <p><strong>مثال:</strong> "تحتاج بطاقة أو إذن" ← هنا OR صحيح</p>
+                <p><strong>مقابل:</strong> "تحتاج بطاقة وإذن" ← هنا AND صحيح</p>
+            </div>
+        </div>
+
+        <!-- Slide 37: Practice Makes Perfect -->
+        <div class="slide">
+            <h1><span class="emoji">💪</span> التمرين يصنع الكمال</h1>
+            <div class="example-box">
+                <h2>تمارين سريعة للمنزل:</h2>
+                <h3>تمرين 1 - التبسيط:</h3>
+                <code>بسط: (A AND B) OR (A AND NOT B)</code>
+                <h3>تمرين 2 - دي مورجان:</h3>
+                <code>بسط: NOT (A OR (B AND C)) باستخدام قوانين دي مورجان</code>
+                <h3>تمرين 3 - تطبيق عملي:</h3>
+                <p>صمم نظام إنذار لسيارة يعمل عند:</p>
+                <p>• الباب مفتوح AND المحرك مطفأ</p>
+                <p>• OR الأضواء مشتعلة AND المحرك مطفأ لأكثر من 5 دقائق</p>
+            </div>
+            <div class="example-box">
+                <h2>نصائح للحل:</h2>
+                <p>✅ ارسم جدول الحقيقة عند الشك</p>
+                <p>✅ استخدم الأقواس لتوضيح الأولوية</p>
+                <p>✅ تذكر قوانين دي مورجان</p>
+            </div>
+        </div>
+
+        <!-- Slide 38: Quick Solutions -->
+        <div class="slide">
+            <h1><span class="emoji">⚡</span> حلول سريعة للتمارين</h1>
+            <div class="truth-table">
+                <pre>
+<span class="highlight">تمرين 1:</span>
+(A AND B) OR (A AND NOT B)
+= A AND (B OR NOT B)    (التوزيع)
+= A AND 1              (قانون النفي)
+= A                    (قانون الهوية)
+
+<span class="highlight">تمرين 2:</span>
+NOT (A OR (B AND C))
+= NOT A AND NOT (B AND C)    (دي مورجان)
+= NOT A AND (NOT B OR NOT C) (دي مورجان مرة أخرى)
+
+<span class="highlight">تمرين 3:</span>
+إنذار = (باب مفتوح AND محرك مطفأ) 
+       OR (أضواء AND محرك مطفأ AND وقت > 5)
+       = محرك مطفأ AND (باب مفتوح OR (أضواء AND وقت > 5))
+                </pre>
+            </div>
+        </div>
+
+        <!-- Slide 39: Advanced Topics Preview -->
+        <div class="slide">
+            <h1><span class="emoji">🔮</span> مواضيع متقدمة (معاينة)</h1>
+            <div class="example-box">
+                <h2>ما سنتعلمه لاحقاً:</h2>
+                <h3>🔧 Boolean Functions:</h3>
+                <p>دوال معقدة تأخذ عدة متغيرات بوليانية</p>
+                <h3>🗺️ Karnaugh Maps:</h3>
+                <p>طريقة بصرية لتبسيط المعادلات المعقدة</p>
+                <h3>⚙️ Logic Gates:</h3>
+                <p>كيف تُطبق هذه المفاهيم في الأجهزة الفعلية</p>
+                <h3>🧮 Boolean Algebra في الخوارزميات:</h3>
+                <p>استخدام هذه المفاهيم في كتابة خوارزميات أسرع</p>
+            </div>
+            <div class="example-box">
+                <h2>تطبيقات المستقبل:</h2>
+                <p>🤖 الذكاء الاصطناعي | 🔐 التشفير | 🎮 تطوير الألعاب</p>
+            </div>
+        </div>
+
+        <!-- Slide 40: Summary and Review -->
+        <div class="slide">
+            <h1><span class="emoji">📋</span> ملخص المحاضرة</h1>
+            <div class="truth-table">
+                <h2>ما تعلمناه اليوم:</h2>
+                <pre>
+<span class="highlight">1. المفاهيم الأساسية:</span>
+   • الجبر البوليني = رياضيات 0 و 1
+   • ثلاث عمليات: AND, OR, NOT
+
+<span class="highlight">2. القوانين المهمة:</span>
+   • قوانين الهوية: A AND 1 = A, A OR 0 = A
+   • قوانين النفي: A AND NOT A = 0, A OR NOT A = 1
+   • قوانين دي مورجان: NOT (A AND B) = NOT A OR NOT B
+
+<span class="highlight">3. التطبيقات العملية:</span>
+   • البرمجة والشروط
+   • قواعد البيانات والاستعلامات
+   • محركات البحث
+   • أنظمة الأمان والذكاء الاصطناعي
+                </pre>
+            </div>
+        </div>
+
+        <!-- Slide 41: Key Takeaways -->
+        <div class="slide">
+            <h1><span class="emoji">🎯</span> النقاط الرئيسية</h1>
+            <div class="example-box">
+                <h2>🔑 المفتاح للنجاح:</h2>
+                <p><strong>فكر منطقياً:</strong> كل شيء في الحاسوب يُختزل لـ صح/خطأ</p>
+                <p><strong>مارس كثيراً:</strong> حل تمارين يومياً لإتقان القوانين</p>
+                <p><strong>اربط بالواقع:</strong> فكر في أمثلة من حياتك اليومية</p>
+            </div>
+            <div class="example-box">
+                <h2>🚀 للمستقبل:</h2>
+                <p>• الجبر البوليني أساس <strong>كل شيء</strong> في الحاسوب</p>
+                <p>• من المعالجات إلى الذكاء الاصطناعي</p>
+                <p>• فهمه يجعلك مبرمج أفضل وأكثر كفاءة</p>
+            </div>
+            <div class="example-box">
+                <h2>💡 نصيحة أخيرة:</h2>
+                <p><strong>"البساطة هي القمة في التعقيد"</strong> - ليوناردو دا فينشي</p>
+                <p>أعقد الأنظمة تُبنى من قواعد بسيطة مثل AND و OR و NOT</p>
+            </div>
+        </div>
+
+        <!-- Slide 42: Next Steps -->
+        <div class="slide">
+            <h1><span class="emoji">➡️</span> الخطوات التالية</h1>
+            <div class="example-box">
+                <h2>📚 للمذاكرة هذا الأسبوع:</h2>
+                <p>• راجع جداول الحقيقة للعمليات الثلاث</p>
+                <p>• احفظ قوانين دي مورجان (مهمة جداً!)</p>
+                <p>• حل التمارين المعطاة في الشرائح</p>
+                <p>• اقرأ الفصل المحدد من الكتاب</p>
+            </div>
+            <div class="example-box">
+                <h2>💻 تطبيق عملي:</h2>
+                <p>• جرب كتابة شروط بسيطة في Python</p>
+                <p>• ابحث في Google باستخدام AND, OR, NOT</p>
+                <p>• فكر في تطبيق الجبر البوليني في تخصصك</p>
+            </div>
+            <div class="example-box">
+                <h2>📅 المحاضرة القادمة:</h2>
+                <h3>"الدوائر المنطقية وBinary Numbers"</h3>
+                <p>سنتعلم كيف تُطبق هذه المفاهيم في الأجهزة الفعلية</p>
+            </div>
+        </div>
+
+        <!-- Slide 43: Thank You -->
+        <div class="slide">
+            <h1><span class="emoji">🙏</span> شكراً لحسن استماعكم</h1>
+            <h2><span class="emoji">❓</span> أسئلة؟</h2>
+            <div class="example-box">
+                <h3>للتواصل:</h3>
+                <p><span class="emoji">📧</span> البريد الإلكتروني: m.rashidi@iumedu.org</p>
+                <p><span class="emoji">🏢</span> ساعات المكتب: الأحد والثلاثاء 2:00-4:00 مساءً</p>
+                <p><span class="emoji">💬</span> منصة التعلم: Blackboard/Canvas</p>
+                <p><span class="emoji">📱</span> مجموعة الواتس آب: [رابط المجموعة]</p>
+            </div>
+            <div class="example-box">
+                <h2>تذكروا دائماً:</h2>
+                <h1><span class="emoji">🎯</span> <span class="highlight">"الجبر البوليني هو لغة الحاسوب الأم!"</span></h1>
+            </div>
+        </div>
+        <div class="slide">
+            <h1><span class="emoji">🙏</span> شكراً لحسن استماعكم</h1>
+            <h2>أسئلة؟</h2>
+            <div class="example-box">
+                <h3>للتواصل:</h3>
+                <p><span class="emoji">📧</span> البريد الإلكتروني: [email]</p>
+                <p><span class="emoji">🏢</span> ساعات المكتب: [الأوقات]</p>
+                <p><span class="emoji">💬</span> منصة التعلم: [رابط المنصة]</p>
+                <h3>المحاضرة القادمة:</h3>
+                <p><strong>"تطبيقات متقدمة في الجبر البوليني"</strong></p>
+            </div>
+            <h2><span class="emoji">🎯</span> تذكر: الجبر البوليني هو أساس كل ما يحدث في الحاسوب!</h2>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button onclick="previousSlide()">السابق</button>
+        <button onclick="nextSlide()">التالي</button>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            document.getElementById('currentSlide').textContent = index + 1;
+        }
+
+        function nextSlide() {
+            currentSlideIndex = (currentSlideIndex + 1) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        function previousSlide() {
+            currentSlideIndex = (currentSlideIndex - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlideIndex);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                previousSlide();
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
